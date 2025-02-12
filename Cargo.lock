@@ -5,12 +5,3 @@ version = 4
 [[package]]
 name = "calcucalc"
 version = "0.1.0"
-dependencies = [
- "heavy_duty_bools",
-]
-
-[[package]]
-name = "heavy_duty_bools"
-version = "0.1.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "90aa8c68bb447b5a1f8d647a833d5eee705840f44c1eee5b1efcb2ac1e5acf56"
