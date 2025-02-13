@@ -17,10 +17,25 @@ impl Monomial {
         Monomial{coefficient: self.coefficient + other.coefficient, power: self.power}
     }
 
+    /// Subtract one monomial from another, if they have the same power of x.
+    fn subtract_monomial_of_same_power(&self, other: Monomial) -> Monomial {
+        if self.power != other.power {
+            panic!("Cannot subtract monomials with different powers of x.");
+        };
+        Monomial{coefficient: self.coefficient - other.coefficient, power: self.power}
+    }
+
     /// Multiply one monomial by another.
     fn multiply_monomial(&self, other: Monomial) -> Monomial {
         Monomial{coefficient: self.coefficient * other.coefficient, power: self.power + other.power}
     }
+
+    /// Divide one monomial by another.
+    fn divide_monomial(&self, other: Monomial) -> Monomial {
+        Monomial{coefficient: self.coefficient / other.coefficient, power: self.power - other.power}
+    }
+
+
 }
 
 
