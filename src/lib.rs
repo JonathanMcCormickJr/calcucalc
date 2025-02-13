@@ -1,21 +1,28 @@
-use std::io::Error;
 
+
+/// A monomial is a polynomial with only one term. It is a product of a coefficient and a power of x.
 #[derive(Debug, PartialEq)]
 struct Monomial {
-    coefficient: u8,
-    power: u8,
+    coefficient: i16,
+    power: i16,
 }
 
 impl Monomial {
-    fn add_monomial_of_same_power(&self, other: Monomial) -> Result<Monomial, Error> {
-        if self.power == other.power {
-            Ok(Monomial{coefficient: self.coefficient + other.coefficient, power: self.power})
-        } else {
-            return Err(Error::new(std::io::ErrorKind::InvalidInput, "cannot combine monomials of different powers of x"));
-        }
+
+    /// Add one monomial to another, if they have the same power of x.
+    fn add_monomial_of_same_power(&self, other: Monomial) -> Monomial {
+        if self.power != other.power {
+            panic!("Cannot add monomials with different powers of x.");
+        };
+        Monomial{coefficient: self.coefficient + other.coefficient, power: self.power}
     }
 
+    /// Multiply one monomial by another.
+    fn multiply_monomial(&self, other: Monomial) -> Monomial {
+        Monomial{coefficient: self.coefficient * other.coefficient, power: self.power + other.power}
+    }
 }
+
 
 // RESUME HERE...
 
