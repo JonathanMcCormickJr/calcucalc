@@ -60,14 +60,53 @@ mod tests {
         let m2 = Monomial{coefficient: 2, power: 1};
         let m3 = Monomial{coefficient: 3, power: 1};
         assert_eq!(m3, m1.add_monomial_of_same_power(m2));
+
+        let m4 = Monomial{coefficient: 45, power: 250};
+        let m5 = Monomial{coefficient: 57, power: 250};
+        let m6 = Monomial{coefficient: 102, power: 250};
+        assert_eq!(m6, m4.add_monomial_of_same_power(m5));
+
+        let m7 = Monomial{coefficient: 1, power: -11};
+        let m8 = Monomial{coefficient: 2, power: -11};
+        let m9 = Monomial{coefficient: 3, power: -11};
+        assert_eq!(m9, m7.add_monomial_of_same_power(m8));
+
+        let m10 = Monomial{coefficient: 1, power: 0};
+        let m11 = Monomial{coefficient: 2, power: 0};
+        let m12 = Monomial{coefficient: 3, power: 0};
+        assert_eq!(m12, m10.add_monomial_of_same_power(m11));
     }
 
     #[test]
-    #[should_panic]
-    fn test_panic_on_adding_monomial_of_different_power() {
+    #[should_panic(expected = "Cannot add monomials with different powers of x.")]
+    fn test_panic_on_adding_monomial_of_different_power0() {
         let m1 = Monomial{coefficient: 1, power: 1};
         let m2 = Monomial{coefficient: 2, power: 2};
         m1.add_monomial_of_same_power(m2);
+    }
+
+    #[test]
+    #[should_panic(expected = "Cannot add monomials with different powers of x.")]
+    fn test_panic_on_adding_monomial_of_different_power1() {
+        let m3 = Monomial{coefficient: 1, power: 0};
+        let m4 = Monomial{coefficient: 2, power: 1};
+        m3.add_monomial_of_same_power(m4);
+    }
+
+    #[test]
+    #[should_panic(expected = "Cannot add monomials with different powers of x.")]
+    fn test_panic_on_adding_monomial_of_different_power2() {
+        let m5 = Monomial{coefficient: 1, power: -1};
+        let m6 = Monomial{coefficient: 2, power: 0};
+        m5.add_monomial_of_same_power(m6);
+    }
+
+    #[test]
+    #[should_panic(expected = "Cannot add monomials with different powers of x.")]
+    fn test_panic_on_adding_monomial_of_different_power3() {
+        let m7 = Monomial{coefficient: 1, power: -1};
+        let m8 = Monomial{coefficient: 2, power: 1};
+        m7.add_monomial_of_same_power(m8);
     }
 
     #[test]
@@ -76,14 +115,45 @@ mod tests {
         let m2 = Monomial{coefficient: 2, power: 1};
         let m3 = Monomial{coefficient: -1, power: 1};
         assert_eq!(m3, m1.subtract_monomial_of_same_power(m2));
+
+        let m4 = Monomial{coefficient: 45, power: 250};
+        let m5 = Monomial{coefficient: 57, power: 250};
+        let m6 = Monomial{coefficient: -12, power: 250};
+        assert_eq!(m6, m4.subtract_monomial_of_same_power(m5));
+
+        let m7 = Monomial{coefficient: 1, power: -11};
+        let m8 = Monomial{coefficient: 2, power: -11};
+        let m9 = Monomial{coefficient: -1, power: -11};
+        assert_eq!(m9, m7.subtract_monomial_of_same_power(m8));
+
+        let m10 = Monomial{coefficient: 1, power: 0};
+        let m11 = Monomial{coefficient: 2, power: 0};
+        let m12 = Monomial{coefficient: -1, power: 0};
+        assert_eq!(m12, m10.subtract_monomial_of_same_power(m11));
     }
 
     #[test]
     #[should_panic]
-    fn test_panic_on_subtracting_monomial_of_different_power() {
+    fn test_panic_on_subtracting_monomial_of_different_power1() {
         let m1 = Monomial{coefficient: 1, power: 1};
         let m2 = Monomial{coefficient: 2, power: 2};
         m1.subtract_monomial_of_same_power(m2);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_panic_on_subtracting_monomial_of_different_power2() {
+        let m3 = Monomial{coefficient: 1, power: 0};
+        let m4 = Monomial{coefficient: 2, power: 1};
+        m3.subtract_monomial_of_same_power(m4);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_panic_on_subtracting_monomial_of_different_power3() {
+        let m5 = Monomial{coefficient: 1, power: -1};
+        let m6 = Monomial{coefficient: 2, power: 0};
+        m5.subtract_monomial_of_same_power(m6);
     }
 
     #[test]
@@ -92,6 +162,64 @@ mod tests {
         let m2 = Monomial{coefficient: 3, power: 2};
         let m3 = Monomial{coefficient: 6, power: 3};
         assert_eq!(m3, m1.multiply_monomial(m2));
+
+        let m4 = Monomial{coefficient: 45, power: 250};
+        let m5 = Monomial{coefficient: 57, power: 250};
+        let m6 = Monomial{coefficient: 2565, power: 500};
+        assert_eq!(m6, m4.multiply_monomial(m5));
+
+        let m7 = Monomial{coefficient: 1, power: -11};
+        let m8 = Monomial{coefficient: 2, power: -11};
+        let m9 = Monomial{coefficient: 2, power: -22};
+        assert_eq!(m9, m7.multiply_monomial(m8));
+
+        let m10 = Monomial{coefficient: 1, power: 0};
+        let m11 = Monomial{coefficient: 2, power: 0};
+        let m12 = Monomial{coefficient: 2, power: 0};
+        assert_eq!(m12, m10.multiply_monomial(m11));
+
+        let m13 = Monomial{coefficient: 1, power: 0};
+        let m14 = Monomial{coefficient: 0, power: 500};
+        let m15 = Monomial{coefficient: 0, power: 500};
+        assert_eq!(m15, m13.multiply_monomial(m14));
+
+        let m16 = Monomial{coefficient: 0, power: 0};
+        let m17 = Monomial{coefficient: 0, power: 0};
+        let m18 = Monomial{coefficient: 0, power: 0};
+        assert_eq!(m18, m16.multiply_monomial(m17));
+    }
+
+    #[test]
+    fn test_divide_monomial() {
+        let m1 = Monomial{coefficient: 6, power: 3};
+        let m2 = Monomial{coefficient: 2, power: 1};
+        let m3 = Monomial{coefficient: 3, power: 2};
+        assert_eq!(m3, m1.divide_monomial(m2));
+
+        let m4 = Monomial{coefficient: 2565, power: 500};
+        let m5 = Monomial{coefficient: 57, power: 250};
+        let m6 = Monomial{coefficient: 45, power: 250};
+        assert_eq!(m6, m4.divide_monomial(m5));
+
+        let m7 = Monomial{coefficient: 2, power: -22};
+        let m8 = Monomial{coefficient: 2, power: -11};
+        let m9 = Monomial{coefficient: 1, power: -11};
+        assert_eq!(m9, m7.divide_monomial(m8));
+
+        let m10 = Monomial{coefficient: 2, power: 0};
+        let m11 = Monomial{coefficient: 2, power: 0};
+        let m12 = Monomial{coefficient: 1, power: 0};
+        assert_eq!(m12, m10.divide_monomial(m11));
+
+        let m13 = Monomial{coefficient: 0, power: 500};
+        let m14 = Monomial{coefficient: 1, power: 0};
+        let m15 = Monomial{coefficient: 0, power: 500};
+        assert_eq!(m15, m13.divide_monomial(m14));
+
+        let m16 = Monomial{coefficient: 0, power: 0};
+        let m17 = Monomial{coefficient: 1, power: 0};
+        let m18 = Monomial{coefficient: 0, power: 0};
+        assert_eq!(m18, m16.divide_monomial(m17));
     }
 
 }
