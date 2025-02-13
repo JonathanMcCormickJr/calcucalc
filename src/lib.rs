@@ -47,12 +47,51 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_monomial() {
+    fn test_monomial_identity() {
         assert_eq!(Monomial{coefficient: 1, power: 1}, Monomial{coefficient: 1, power: 1});
         assert_ne!(Monomial{coefficient: 1, power: 1}, Monomial{coefficient: 0, power: 1});
         assert_ne!(Monomial{coefficient: 1, power: 1}, Monomial{coefficient: 1, power: 0});
-
-        // ...AND HERE
-        
     }
+
+
+    #[test]
+    fn test_add_monomial_of_same_power() {
+        let m1 = Monomial{coefficient: 1, power: 1};
+        let m2 = Monomial{coefficient: 2, power: 1};
+        let m3 = Monomial{coefficient: 3, power: 1};
+        assert_eq!(m3, m1.add_monomial_of_same_power(m2));
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_panic_on_adding_monomial_of_different_power() {
+        let m1 = Monomial{coefficient: 1, power: 1};
+        let m2 = Monomial{coefficient: 2, power: 2};
+        m1.add_monomial_of_same_power(m2);
+    }
+
+    #[test]
+    fn test_subtract_monomial_of_same_power() {
+        let m1 = Monomial{coefficient: 1, power: 1};
+        let m2 = Monomial{coefficient: 2, power: 1};
+        let m3 = Monomial{coefficient: -1, power: 1};
+        assert_eq!(m3, m1.subtract_monomial_of_same_power(m2));
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_panic_on_subtracting_monomial_of_different_power() {
+        let m1 = Monomial{coefficient: 1, power: 1};
+        let m2 = Monomial{coefficient: 2, power: 2};
+        m1.subtract_monomial_of_same_power(m2);
+    }
+
+    #[test]
+    fn test_multiply_monomial() {
+        let m1 = Monomial{coefficient: 2, power: 1};
+        let m2 = Monomial{coefficient: 3, power: 2};
+        let m3 = Monomial{coefficient: 6, power: 3};
+        assert_eq!(m3, m1.multiply_monomial(m2));
+    }
+
 }
