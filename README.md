@@ -10,3 +10,9 @@ One big problem which is worth mentioning is the set of problems that we are try
 
 For now, this library will focus on solving basic cases first for the sake of simplicity, but refactoring may be necessary in the future in order to expand the scope of the library.
 
+## Features
+* Monomials
+    * Addition & subtraction (determined by the sign of the coefficient)
+    * Multiplication & division (determined by the sign of the exponent)
+
+    

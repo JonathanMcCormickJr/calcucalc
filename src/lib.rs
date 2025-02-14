@@ -23,13 +23,20 @@ impl Monomial {
     }
 }
 
+/// A polynomial is a sum of monomials.
+#[derive(Debug, PartialEq)]
+struct Polynomial {
+    monomials: Vec<Monomial>,
+}
 
-// RESUME HERE...
+// RESUME HERE BY IMPLEMENTING METHODS FOR THE POLYNOMIAL STRUCT.  
 
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    // Tests for the Monomial struct.
 
     #[test]
     fn test_monomial_identity() {
@@ -126,4 +133,34 @@ mod tests {
         let m18 = Monomial{coefficient: 0, power: 0};
         assert_eq!(m18, m16.multiply_monomial(m17));
     }
+
+    // Tests for the Polynomial struct.
+
+    #[test]
+    fn test_polynomial_identity() {
+        let p1 = Polynomial{monomials: vec![Monomial{coefficient: 1, power: 1}]};
+        let p2 = Polynomial{monomials: vec![Monomial{coefficient: 1, power: 1}]};
+        assert_eq!(p1, p2);
+
+        let p3 = Polynomial{monomials: vec![Monomial{coefficient: 1, power: 1}]};
+        let p4 = Polynomial{monomials: vec![Monomial{coefficient: 1, power: 0}]};
+        assert_ne!(p3, p4);
+
+        let p5 = Polynomial{monomials: vec![Monomial{coefficient: 1, power: 1}]};
+        let p6 = Polynomial{monomials: vec![Monomial{coefficient: 0, power: 1}]};
+        assert_ne!(p5, p6);
+
+        let p7 = Polynomial{monomials: vec![Monomial{coefficient: 1, power: 1}]};
+        let p8 = Polynomial{monomials: vec![Monomial{coefficient: 0, power: 0}]};
+        assert_ne!(p7, p8);
+
+        let p9 = Polynomial{monomials: vec![Monomial{coefficient: 1, power: 1}]};
+        let p10 = Polynomial{monomials: vec![Monomial{coefficient: 1, power: 1}, Monomial{coefficient: 1, power: 1}]};
+        assert_ne!(p9, p10);
+    }
+
+
+    // RESUME HERE BY IMPLEMENTING TESTS FOR THE POLYNOMIAL STRUCT.
+
+
 }
