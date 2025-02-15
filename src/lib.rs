@@ -39,7 +39,7 @@ impl Polynomial {
     }
 
     /// Simplify the polynomial
-    /// This function simplifies the polynomial by combining elements of the same power of x, and then sorting the elements by the exponent of x.
+    /// This function simplifies the polynomial by combining elements of the same power of x, and then sorting the elements by the exponent of x (in descending order).
     fn simplified(&self) -> Polynomial {
         let simplified = self.simplify_by_combining_alike_powers().sort_by_exponent();
         simplified
@@ -82,7 +82,27 @@ impl Polynomial {
         Polynomial(elements)
     }
 
-    // Add one polynomial to another.
+    /// Add one polynomial to another.
+    fn add_polynomial(&self, other: Polynomial) -> Polynomial {
+        let mut elements = self.0.clone();
+        elements.extend(other.0.clone());
+        let new_polynomial = Polynomial(elements);
+        new_polynomial.simplified()
+    }
+
+    /// Multiply one polynomial by another.
+    /// This function multiplies each element of the first polynomial by each element of the second polynomial, and then simplifies the result.
+    fn multiply_polynomial(&self, other: Polynomial) -> Polynomial {
+        let mut elements = vec![];
+        for element1 in &self.0 {
+            for element2 in &other.0 {
+                elements.push(element1.multiply_monomial(element2.clone()));
+            }
+        }
+        let new_polynomial = Polynomial(elements);
+        new_polynomial.simplified()
+    }
+
     // CONTINUE HERE...and add a slash to the end of the line above.
 }
 
