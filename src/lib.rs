@@ -41,8 +41,7 @@ impl Polynomial {
     /// Simplify the polynomial
     /// This function simplifies the polynomial by combining elements of the same power of x, and then sorting the elements by the exponent of x (in descending order).
     fn simplified(&self) -> Polynomial {
-        let simplified = self.simplify_by_combining_alike_powers().sort_by_exponent();
-        simplified
+        self.simplify_by_combining_alike_powers().sort_by_exponent()
     }
 
     /// Combine elements of same powers
@@ -668,5 +667,40 @@ mod tests {
         assert_eq!(p9, p7.add_polynomial(p8));
     }
 
+    // CONTINUE HERE... TEST MULTIPLICATION OF POLYNOMIALS.
+    #[test]
+    fn test_multiply_polynomial() {
+        let p1 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
+        let p2 = Polynomial(vec![Monomial { c: 2_f64, e: 1_f64 }]);
+        let p3 = Polynomial(vec![Monomial { c: 2_f64, e: 2_f64 }]);
+        assert_eq!(p3, p1.multiply_polynomial(p2));
+
+        let p4 = Polynomial(vec![
+            Monomial {
+                c: -1.5_f64,
+                e: -1.8_f64,
+            },
+            Monomial { c: 2_f64, e: 1_f64 },
+        ]);
+        let p5 = Polynomial(vec![
+            Monomial { c: 3_f64, e: 1_f64 },
+            Monomial {
+                c: 1_f64,
+                e: -1.8_f64,
+            },
+        ]);
+        let p6 = Polynomial(vec![
+            Monomial { c: 6_f64, e: 2_f64 },
+            Monomial {
+                c: -2.5_f64,
+                e: -0.8_f64,
+            },
+            Monomial {
+                c: -1.5_f64,
+                e: -3.6_f64,
+            },
+        ]);
+        assert_eq!(p6, p4.multiply_polynomial(p5));
+    }
     // RESUME HERE BY IMPLEMENTING TESTS FOR THE POLYNOMIAL STRUCT.
 }
