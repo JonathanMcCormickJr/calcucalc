@@ -307,7 +307,7 @@ mod tests {
     }
 
     #[test]
-    fn test_simplify_by_combining_alike_powers() {
+    fn test_simplified() {
         let p1 = Polynomial(vec![
             Monomial { c: 1_f64, e: 1_f64 },
             Monomial { c: 2_f64, e: 1_f64 },
@@ -491,6 +491,112 @@ mod tests {
             },
         ]);
         assert_eq!(p15.simplified(), p16.simplify_by_combining_alike_powers());
+
+        let p17 = Polynomial(vec![
+            Monomial {
+                c: 1.5_f64,
+                e: -10_f64,
+            },
+            Monomial {
+                c: 2_f64,
+                e: 0.5_f64,
+            },
+            Monomial {
+                c: 3_f64,
+                e: 0.5_f64,
+            },
+            Monomial {
+                c: 4_f64,
+                e: 94_f64,
+            },
+            Monomial {
+                c: 5_f64,
+                e: -0.5_f64,
+            },
+            Monomial { c: 6_f64, e: 0_f64 },
+            Monomial { c: 7_f64, e: 0_f64 },
+            Monomial {
+                c: 8_f64,
+                e: -0.5_f64,
+            },
+            Monomial { c: 9_f64, e: 0_f64 },
+        ]);
+        let p18 = Polynomial(vec![
+            Monomial {
+                c: 4_f64,
+                e: 94_f64,
+            },
+            Monomial {
+                c: 5_f64,
+                e: 0.5_f64,
+            },
+            Monomial {
+                c: 22_f64,
+                e: 0_f64,
+            },
+            Monomial {
+                c: 13_f64,
+                e: -0.5_f64,
+            },
+            Monomial {
+                c: 1.5_f64,
+                e: -10_f64,
+            },
+        ]);
+        assert_eq!(p17.simplified(), p18);
+
+        let p19 = Polynomial(vec![
+            Monomial {
+                c: -1.5_f64,
+                e: -10_f64,
+            },
+            Monomial {
+                c: 2_f64,
+                e: 0.5_f64,
+            },
+            Monomial {
+                c: -3_f64,
+                e: 0.5_f64,
+            },
+            Monomial {
+                c: -4_f64,
+                e: 94_f64,
+            },
+            Monomial {
+                c: -5_f64,
+                e: -0.5_f64,
+            },
+            Monomial { c: 6_f64, e: 0_f64 },
+            Monomial { c: 7_f64, e: -0_f64 },
+            Monomial {
+                c: 8_f64,
+                e: -0.5_f64,
+            },
+            Monomial { c: 9_f64, e: 0_f64 },
+        ]);
+        let p20 = Polynomial(vec![
+            Monomial {
+                c: -4_f64,
+                e: 94_f64,
+            },
+            Monomial {
+                c: -1_f64,
+                e: 0.5_f64,
+            },
+            Monomial {
+                c: 22_f64,
+                e: 0_f64,
+            },
+            Monomial {
+                c: 3_f64,
+                e: -0.5_f64,
+            },
+            Monomial {
+                c: -1.5_f64,
+                e: -10_f64,
+            },
+        ]);
+        assert_eq!(p19.simplified(), p20);
 
         // ADD MORE CASES HERE...
     }
