@@ -597,8 +597,26 @@ mod tests {
             },
         ]);
         assert_eq!(p19.simplified(), p20);
-
-        // ADD MORE CASES HERE...
     }
+
+    #[test]
+    fn test_add_polynomial() {
+        let p1 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
+        let p2 = Polynomial(vec![Monomial { c: 2_f64, e: 1_f64 }]);
+        let p3 = Polynomial(vec![Monomial { c: 3_f64, e: 1_f64 }]);
+        assert_eq!(p3, p1.add_polynomial(p2));
+
+        let p4 = Polynomial(vec![Monomial { c: -1.5_f64, e: -1.8_f64 }, Monomial { c: 2_f64, e: 1_f64 }]);
+        let p5 = Polynomial(vec![Monomial { c: 3_f64, e: 1_f64 }, Monomial { c: 1_f64, e: -1.8_f64 }]);
+        let p6 = Polynomial(vec![Monomial { c: 5_f64, e: 1_f64 }, Monomial { c: -0.5, e: -1.8_f64 }]);
+        assert_eq!(p6, p4.add_polynomial(p5));
+
+        let p7 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }, Monomial { c: 2_f64, e: -1_f64 }, Monomial { c: 3_f64, e: 0.5_f64 }]);
+        let p8 = Polynomial(vec![Monomial { c: 4_f64, e: 1_f64 }, Monomial { c: 5_f64, e: -1_f64 }, Monomial { c: 6_f64, e: 0.5_f64 }]);
+        let p9 = Polynomial(vec![Monomial { c: 5_f64, e: 1_f64 }, Monomial { c: 9_f64, e: 0.5_f64}, Monomial { c: 7_f64, e: -1_f64 }]);
+        assert_eq!(p9, p7.add_polynomial(p8));
+    }
+
+    
     // RESUME HERE BY IMPLEMENTING TESTS FOR THE POLYNOMIAL STRUCT.
 }
