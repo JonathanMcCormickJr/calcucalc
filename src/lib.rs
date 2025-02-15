@@ -1,7 +1,7 @@
 
 
 /// A monomial is a polynomial with only one term. It is a product of a coefficient and a power of x.
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 struct Monomial {
     coefficient: i16,
     power: i16,
@@ -29,7 +29,46 @@ struct Polynomial {
     monomials: Vec<Monomial>,
 }
 
-// RESUME HERE BY IMPLEMENTING METHODS FOR THE POLYNOMIAL STRUCT.  
+impl Polynomial {
+    /// Create new Polynomial
+    fn new() -> Polynomial {
+        Polynomial{
+            monomials: vec![],
+        }
+    }
+
+    /// Combine elements of same powers
+    fn simplify_by_combining_alike_powers(&self) -> Polynomial {
+        let elements = &self.monomials;
+        let mut simplified_elements = Polynomial::new();
+        
+        let mut first_element_transferred = false;
+
+        for element in elements {
+            if !first_element_transferred {
+                simplified_elements.monomials.push(element.clone());
+                first_element_transferred = true;
+                continue;
+            }
+
+            let mut found_match = false;
+            for simplified_element in &mut simplified_elements.monomials {
+                if simplified_element.power == element.power {
+                    *simplified_element = simplified_element.add_monomial_of_same_power(element.clone());
+                    found_match = true;
+                    break;
+                }
+            }
+            if !found_match {
+                simplified_elements.monomials.push(element.clone());
+            }
+        }
+        simplified_elements
+    }
+
+    // Add one polynomial to another.
+    // CONTINUE HERE...and add a slash to the end of the line above. 
+}
 
 
 #[cfg(test)]
@@ -159,7 +198,51 @@ mod tests {
         assert_ne!(p9, p10);
     }
 
+    #[test]
+    fn test_new_polynomial() {
+        let p1 = Polynomial::new();
+        let p2 = Polynomial{monomials: vec![]};
+        assert_eq!(p1, p2);
 
+        assert_eq!(p1.monomials.len(), 0);
+        assert_eq!(p2.monomials.len(), 0);
+        assert_eq!(p1.monomials, p2.monomials);
+
+        assert_eq!(24, std::mem::size_of_val(&p1));
+        assert_eq!(24, std::mem::size_of_val(&p2));
+    }
+
+    #[test]
+    fn test_simplify_by_combining_alike_powers() {
+        let p1 = Polynomial{monomials: vec![Monomial{coefficient: 1, power: 1}, Monomial{coefficient: 2, power: 1}]};
+        let p2 = Polynomial{monomials: vec![Monomial{coefficient: 3, power: 1}]};
+        assert_eq!(p2, p1.simplify_by_combining_alike_powers());
+
+        let p3 = Polynomial{monomials: vec![Monomial{coefficient: 1, power: 1}, Monomial{coefficient: 2, power: 1}, Monomial{coefficient: 3, power: 1}]};
+        let p4 = Polynomial{monomials: vec![Monomial{coefficient: 6, power: 1}]};
+        assert_eq!(p4, p3.simplify_by_combining_alike_powers());
+
+        let p5 = Polynomial{monomials: vec![Monomial{coefficient: -1, power: 1}, Monomial{coefficient: -2, power: 1}, Monomial{coefficient: -3, power: 1}, Monomial{coefficient: 4, power: 1}]};
+        let p6 = Polynomial{monomials: vec![Monomial{coefficient: -2, power: 1}]};
+        assert_eq!(p6, p5.simplify_by_combining_alike_powers());
+
+        let p7 = Polynomial{monomials: vec![Monomial{coefficient: 1, power: 1}, Monomial{coefficient: 2, power: 1}, Monomial{coefficient: 3, power: 1}, Monomial{coefficient: 4, power: 1}, Monomial{coefficient: 5, power: 1}]};
+        let p8 = Polynomial{monomials: vec![Monomial{coefficient: 15, power: 1}]};
+        assert_eq!(p8, p7.simplify_by_combining_alike_powers());
+
+        let p9 = Polynomial{monomials: vec![Monomial{coefficient: 1, power: 1}, Monomial{coefficient: 2, power: 1}, Monomial{coefficient: 3, power: 1}, Monomial{coefficient: 4, power: 1}, Monomial{coefficient: 5, power: 1}, Monomial{coefficient: 6, power: 1}]};
+        let p10 = Polynomial{monomials: vec![Monomial{coefficient: 21, power: 1}]};
+        assert_eq!(p10, p9.simplify_by_combining_alike_powers());
+
+        let p11 = Polynomial{monomials: vec![Monomial{coefficient: 1, power: 1}, Monomial{coefficient: 2, power: 1}, Monomial{coefficient: 3, power: 1}, Monomial{coefficient: 4, power: 1}, Monomial{coefficient: 5, power: 1}, Monomial{coefficient: 6, power: 1}, Monomial{coefficient: 7, power: 1}]};
+        let p12 = Polynomial{monomials: vec![Monomial{coefficient: 28, power: 1}]};
+        assert_eq!(p12, p11.simplify_by_combining_alike_powers());
+
+        // ADD MORE CASES HERE...
+
+
+
+    }
     // RESUME HERE BY IMPLEMENTING TESTS FOR THE POLYNOMIAL STRUCT.
 
 
