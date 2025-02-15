@@ -38,6 +38,13 @@ impl Polynomial {
         Polynomial(vec![])
     }
 
+    /// Simplify the polynomial
+    /// This function simplifies the polynomial by combining elements of the same power of x, and then sorting the elements by the exponent of x.
+    fn simplified(&self) -> Polynomial {
+        let simplified = self.simplify_by_combining_alike_powers().sort_by_exponent();
+        simplified
+    }
+
     /// Combine elements of same powers
     fn simplify_by_combining_alike_powers(&self) -> Polynomial {
         let elements = &self.0;
@@ -66,6 +73,13 @@ impl Polynomial {
             }
         }
         simplified_elements
+    }
+
+    /// Sort the elements of the polynomial by the exponent of x.
+    fn sort_by_exponent(&self) -> Polynomial {
+        let mut elements = self.0.clone();
+        elements.sort_by(|a, b| b.e.cmp(&a.e));
+        Polynomial(elements)
     }
 
     // Add one polynomial to another.
@@ -216,7 +230,7 @@ mod tests {
     fn test_simplify_by_combining_alike_powers() {
         let p1 = Polynomial(vec![Monomial { c: 1, e: 1 }, Monomial { c: 2, e: 1 }]);
         let p2 = Polynomial(vec![Monomial { c: 3, e: 1 }]);
-        assert_eq!(p2, p1.simplify_by_combining_alike_powers());
+        assert_eq!(p2, p1.simplified());
 
         let p3 = Polynomial(vec![
             Monomial { c: 1, e: 1 },
@@ -224,7 +238,7 @@ mod tests {
             Monomial { c: 3, e: 1 },
         ]);
         let p4 = Polynomial(vec![Monomial { c: 6, e: 1 }]);
-        assert_eq!(p4, p3.simplify_by_combining_alike_powers());
+        assert_eq!(p4, p3.simplified());
 
         let p5 = Polynomial(vec![
             Monomial { c: -1, e: 1 },
@@ -233,7 +247,7 @@ mod tests {
             Monomial { c: 4, e: 1 },
         ]);
         let p6 = Polynomial(vec![Monomial { c: -2, e: 1 }]);
-        assert_eq!(p6, p5.simplify_by_combining_alike_powers());
+        assert_eq!(p6, p5.simplified());
 
         let p7 = Polynomial(vec![
             Monomial { c: 1, e: 1 },
@@ -243,7 +257,7 @@ mod tests {
             Monomial { c: 5, e: 1 },
         ]);
         let p8 = Polynomial(vec![Monomial { c: 15, e: 1 }]);
-        assert_eq!(p8, p7.simplify_by_combining_alike_powers());
+        assert_eq!(p8, p7.simplified());
 
         let p9 = Polynomial(vec![
             Monomial { c: 1, e: 1 },
@@ -254,7 +268,7 @@ mod tests {
             Monomial { c: 6, e: 1 },
         ]);
         let p10 = Polynomial(vec![Monomial { c: 21, e: 1 }]);
-        assert_eq!(p10, p9.simplify_by_combining_alike_powers());
+        assert_eq!(p10, p9.simplified());
 
         let p11 = Polynomial(vec![
             Monomial { c: 1, e: 1 },
@@ -266,7 +280,48 @@ mod tests {
             Monomial { c: 7, e: 1 },
         ]);
         let p12 = Polynomial(vec![Monomial { c: 28, e: 1 }]);
-        assert_eq!(p12, p11.simplify_by_combining_alike_powers());
+        assert_eq!(p12, p11.simplified());
+
+        let p13 = Polynomial(vec![
+            Monomial { c: 1, e: -16 },
+            Monomial { c: -2, e: -1 },
+            Monomial { c: 3, e: 1 },
+            Monomial { c: -344, e: -50 },
+            Monomial { c: 5, e: 30 },
+            Monomial { c: -5, e: 30 },
+            Monomial { c: 7, e: 1 },
+            Monomial { c: 8, e: 1 },
+        ]);
+        let p14 = Polynomial(vec![
+            Monomial { c: 0, e: 30 },
+            Monomial { c: 18, e: 1 },
+            Monomial { c: -2, e: -1 },
+            Monomial { c: 1, e: -16 },
+            Monomial { c: -344, e: -50 },
+        ]);
+        assert_eq!(p14.simplified(), p13.simplified());
+
+        let p15 = Polynomial(vec![
+            Monomial { c: 1, e: -10 },
+            Monomial { c: 2, e: 31 },
+            Monomial { c: 3, e: 14 },
+            Monomial { c: 4, e: 94 },
+            Monomial { c: 5, e: 15 },
+            Monomial { c: 6, e: 0 },
+            Monomial { c: 7, e: 0 },
+            Monomial { c: 8, e: 31 },
+            Monomial { c: 9, e: 0 },
+        ]);
+        let p16 = Polynomial(vec![
+            Monomial { c: 4, e: 94 },
+            Monomial { c: 10, e: 31 },
+            Monomial { c: 5, e: 15 },
+            Monomial { c: 3, e: 14 },
+            Monomial { c: 22, e: 0 },
+            Monomial { c: 1, e: -10 },
+        ]);
+        assert_eq!(p15.simplified(), p16.simplify_by_combining_alike_powers());
+
 
         // ADD MORE CASES HERE...
     }
