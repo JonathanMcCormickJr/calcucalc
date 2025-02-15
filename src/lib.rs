@@ -30,32 +30,30 @@ impl Monomial {
 
 /// A polynomial is a sum of monomials.
 #[derive(Debug, PartialEq)]
-struct Polynomial {
-    monomials: Vec<Monomial>,
-}
+struct Polynomial(Vec<Monomial>);
 
 impl Polynomial {
     /// Create new Polynomial
     fn new() -> Polynomial {
-        Polynomial { monomials: vec![] }
+        Polynomial ( vec![] )
     }
 
     /// Combine elements of same powers
     fn simplify_by_combining_alike_powers(&self) -> Polynomial {
-        let elements = &self.monomials;
+        let elements = &self.0;
         let mut simplified_elements = Polynomial::new();
 
         let mut first_element_transferred = false;
 
         for element in elements {
             if !first_element_transferred {
-                simplified_elements.monomials.push(element.clone());
+                simplified_elements.0.push(element.clone());
                 first_element_transferred = true;
                 continue;
             }
 
             let mut found_match = false;
-            for simplified_element in &mut simplified_elements.monomials {
+            for simplified_element in &mut simplified_elements.0 {
                 if simplified_element.e == element.e {
                     *simplified_element =
                         simplified_element.add_monomial_of_same_power(element.clone());
@@ -64,7 +62,7 @@ impl Polynomial {
                 }
             }
             if !found_match {
-                simplified_elements.monomials.push(element.clone());
+                simplified_elements.0.push(element.clone());
             }
         }
         simplified_elements
@@ -179,56 +177,36 @@ mod tests {
 
     #[test]
     fn test_polynomial_identity() {
-        let p1 = Polynomial {
-            monomials: vec![Monomial { c: 1, e: 1 }],
-        };
-        let p2 = Polynomial {
-            monomials: vec![Monomial { c: 1, e: 1 }],
-        };
+        let p1 = Polynomial ( vec![Monomial { c: 1, e: 1 }] );
+        let p2 = Polynomial ( vec![Monomial { c: 1, e: 1 }] );
         assert_eq!(p1, p2);
 
-        let p3 = Polynomial {
-            monomials: vec![Monomial { c: 1, e: 1 }],
-        };
-        let p4 = Polynomial {
-            monomials: vec![Monomial { c: 1, e: 0 }],
-        };
+        let p3 = Polynomial ( vec![Monomial { c: 1, e: 1 }] );
+        let p4 = Polynomial ( vec![Monomial { c: 1, e: 0 }] );
         assert_ne!(p3, p4);
 
-        let p5 = Polynomial {
-            monomials: vec![Monomial { c: 1, e: 1 }],
-        };
-        let p6 = Polynomial {
-            monomials: vec![Monomial { c: 0, e: 1 }],
-        };
+        let p5 = Polynomial ( vec![Monomial { c: 1, e: 1 }] );
+        let p6 = Polynomial ( vec![Monomial { c: 0, e: 1 }] );
         assert_ne!(p5, p6);
 
-        let p7 = Polynomial {
-            monomials: vec![Monomial { c: 1, e: 1 }],
-        };
-        let p8 = Polynomial {
-            monomials: vec![Monomial { c: 0, e: 0 }],
-        };
+        let p7 = Polynomial ( vec![Monomial { c: 1, e: 1 }] );
+        let p8 = Polynomial ( vec![Monomial { c: 0, e: 0 }] );
         assert_ne!(p7, p8);
 
-        let p9 = Polynomial {
-            monomials: vec![Monomial { c: 1, e: 1 }],
-        };
-        let p10 = Polynomial {
-            monomials: vec![Monomial { c: 1, e: 1 }, Monomial { c: 1, e: 1 }],
-        };
+        let p9 = Polynomial ( vec![Monomial { c: 1, e: 1 }] );
+        let p10 = Polynomial ( vec![Monomial { c: 1, e: 1 }, Monomial { c: 1, e: 1 }] );
         assert_ne!(p9, p10);
     }
 
     #[test]
     fn test_new_polynomial() {
         let p1 = Polynomial::new();
-        let p2 = Polynomial { monomials: vec![] };
+        let p2 = Polynomial ( vec![] );
         assert_eq!(p1, p2);
 
-        assert_eq!(p1.monomials.len(), 0);
-        assert_eq!(p2.monomials.len(), 0);
-        assert_eq!(p1.monomials, p2.monomials);
+        assert_eq!(p1.0.len(), 0);
+        assert_eq!(p2.0.len(), 0);
+        assert_eq!(p1.0, p2.0);
 
         assert_eq!(24, std::mem::size_of_val(&p1));
         assert_eq!(24, std::mem::size_of_val(&p2));
@@ -236,55 +214,45 @@ mod tests {
 
     #[test]
     fn test_simplify_by_combining_alike_powers() {
-        let p1 = Polynomial {
-            monomials: vec![Monomial { c: 1, e: 1 }, Monomial { c: 2, e: 1 }],
-        };
-        let p2 = Polynomial {
-            monomials: vec![Monomial { c: 3, e: 1 }],
-        };
+        let p1 = Polynomial ( vec![Monomial { c: 1, e: 1 }, Monomial { c: 2, e: 1 }] );
+        let p2 = Polynomial ( vec![Monomial { c: 3, e: 1 }] );
         assert_eq!(p2, p1.simplify_by_combining_alike_powers());
 
-        let p3 = Polynomial {
-            monomials: vec![
+        let p3 = Polynomial ( 
+            vec![
                 Monomial { c: 1, e: 1 },
                 Monomial { c: 2, e: 1 },
                 Monomial { c: 3, e: 1 },
             ],
-        };
-        let p4 = Polynomial {
-            monomials: vec![Monomial { c: 6, e: 1 }],
-        };
+        );
+        let p4 = Polynomial ( vec![Monomial { c: 6, e: 1 }] );
         assert_eq!(p4, p3.simplify_by_combining_alike_powers());
 
-        let p5 = Polynomial {
-            monomials: vec![
+        let p5 = Polynomial (
+            vec![
                 Monomial { c: -1, e: 1 },
                 Monomial { c: -2, e: 1 },
                 Monomial { c: -3, e: 1 },
                 Monomial { c: 4, e: 1 },
             ],
-        };
-        let p6 = Polynomial {
-            monomials: vec![Monomial { c: -2, e: 1 }],
-        };
+        );
+        let p6 = Polynomial ( vec![Monomial { c: -2, e: 1 }] );
         assert_eq!(p6, p5.simplify_by_combining_alike_powers());
 
-        let p7 = Polynomial {
-            monomials: vec![
+        let p7 = Polynomial (
+            vec![
                 Monomial { c: 1, e: 1 },
                 Monomial { c: 2, e: 1 },
                 Monomial { c: 3, e: 1 },
                 Monomial { c: 4, e: 1 },
                 Monomial { c: 5, e: 1 },
             ],
-        };
-        let p8 = Polynomial {
-            monomials: vec![Monomial { c: 15, e: 1 }],
-        };
+        );
+        let p8 = Polynomial ( vec![Monomial { c: 15, e: 1 }] );
         assert_eq!(p8, p7.simplify_by_combining_alike_powers());
 
-        let p9 = Polynomial {
-            monomials: vec![
+        let p9 = Polynomial (
+            vec![
                 Monomial { c: 1, e: 1 },
                 Monomial { c: 2, e: 1 },
                 Monomial { c: 3, e: 1 },
@@ -292,14 +260,12 @@ mod tests {
                 Monomial { c: 5, e: 1 },
                 Monomial { c: 6, e: 1 },
             ],
-        };
-        let p10 = Polynomial {
-            monomials: vec![Monomial { c: 21, e: 1 }],
-        };
+        );
+        let p10 = Polynomial ( vec![Monomial { c: 21, e: 1 }] );
         assert_eq!(p10, p9.simplify_by_combining_alike_powers());
 
-        let p11 = Polynomial {
-            monomials: vec![
+        let p11 = Polynomial (
+            vec![
                 Monomial { c: 1, e: 1 },
                 Monomial { c: 2, e: 1 },
                 Monomial { c: 3, e: 1 },
@@ -308,10 +274,8 @@ mod tests {
                 Monomial { c: 6, e: 1 },
                 Monomial { c: 7, e: 1 },
             ],
-        };
-        let p12 = Polynomial {
-            monomials: vec![Monomial { c: 28, e: 1 }],
-        };
+        );
+        let p12 = Polynomial ( vec![Monomial { c: 28, e: 1 }] );
         assert_eq!(p12, p11.simplify_by_combining_alike_powers());
 
         // ADD MORE CASES HERE...
