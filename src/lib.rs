@@ -1,15 +1,16 @@
+#![doc = include_str!("../README.md")]
 #![forbid(unsafe_code)]
 
-/// A monomial is a polynomial with only one term. It is a product of a coefficient and a power of x.
+/// A monomial is a product of a coefficient and a power of x.
 #[derive(Clone, Debug, PartialEq)]
-struct Monomial {
+pub struct Monomial {
     c: f64, // Coefficient
     e: f64, // Exponent
 }
 
 impl Monomial {
     /// Add one monomial to another, if they have the same power of x.
-    fn add_monomial_of_same_power(&self, other: Monomial) -> Monomial {
+    pub fn add_monomial_of_same_power(&self, other: Monomial) -> Monomial {
         if self.e != other.e {
             panic!("Cannot add monomials with different powers of x.");
         };
@@ -20,7 +21,7 @@ impl Monomial {
     }
 
     /// Multiply one monomial by another.
-    fn multiply_monomial(&self, other: Monomial) -> Monomial {
+    pub fn multiply_monomial(&self, other: Monomial) -> Monomial {
         Monomial {
             c: self.c * other.c,
             e: self.e + other.e,
@@ -30,22 +31,24 @@ impl Monomial {
 
 /// A polynomial is a sum of monomials.
 #[derive(Debug, PartialEq)]
-struct Polynomial(Vec<Monomial>);
+pub struct Polynomial(Vec<Monomial>);
 
 impl Polynomial {
     /// Create new Polynomial
-    fn new() -> Polynomial {
+    pub fn new() -> Polynomial {
         Polynomial(vec![])
     }
 
     /// Simplify the polynomial
     /// This function simplifies the polynomial by combining elements of the same power of x, and then sorting the elements by the exponent of x (in descending order).
-    fn simplified(&self) -> Polynomial {
-        self.simplify_by_combining_alike_powers().eliminate_zero_coefficients().sort_by_exponent()
+    pub fn simplified(&self) -> Polynomial {
+        self.simplify_by_combining_alike_powers()
+            .eliminate_zero_coefficients()
+            .sort_by_exponent()
     }
 
     /// Combine elements of same powers
-    fn simplify_by_combining_alike_powers(&self) -> Polynomial {
+    pub fn simplify_by_combining_alike_powers(&self) -> Polynomial {
         let elements = &self.0;
         let mut simplified_elements = Polynomial::new();
 
@@ -76,7 +79,7 @@ impl Polynomial {
 
     /// Eliminate elements with zero coefficients.
     /// This function eliminates elements with the coefficient `0` from the polynomial.
-    fn eliminate_zero_coefficients(&self) -> Polynomial {
+    pub fn eliminate_zero_coefficients(&self) -> Polynomial {
         let elements = &self.0;
         let mut new_elements = vec![];
         for element in elements {
@@ -88,14 +91,14 @@ impl Polynomial {
     }
 
     /// Sort the elements of the polynomial by the exponent of x.
-    fn sort_by_exponent(&self) -> Polynomial {
+    pub fn sort_by_exponent(&self) -> Polynomial {
         let mut elements = self.0.clone();
         elements.sort_by(|a, b| b.e.partial_cmp(&a.e).unwrap());
         Polynomial(elements)
     }
 
     /// Add one polynomial to another.
-    fn add_polynomial(&self, other: Polynomial) -> Polynomial {
+    pub fn add_polynomial(&self, other: Polynomial) -> Polynomial {
         let mut elements = self.0.clone();
         elements.extend(other.0.clone());
         let new_polynomial = Polynomial(elements);
@@ -104,7 +107,7 @@ impl Polynomial {
 
     /// Multiply one polynomial by another.
     /// This function multiplies each element of the first polynomial by each element of the second polynomial, and then simplifies the result.
-    fn multiply_polynomial(&self, other: Polynomial) -> Polynomial {
+    pub fn multiply_polynomial(&self, other: Polynomial) -> Polynomial {
         let mut elements = vec![];
         for element1 in &self.0 {
             for element2 in &other.0 {
@@ -115,7 +118,7 @@ impl Polynomial {
         new_polynomial.simplified()
     }
 
-    fn derivative(&self) -> Polynomial {
+    pub fn derivative(&self) -> Polynomial {
         let mut elements = vec![];
         for element in &self.0 {
             elements.push(Monomial {
@@ -128,7 +131,7 @@ impl Polynomial {
 
     /// Check if the polynomial is equal to another polynomial within a certain tolerance.
     /// This function is to overcome floating point arithmetic errors.
-    fn is_equal_within_tolerance_to(&self, other: Polynomial) -> bool {
+    pub fn is_equal_within_tolerance_to(&self, other: Polynomial) -> bool {
         let tolerance = 1e-10;
         let simplified_self = self.simplified();
         let simplified_other = other.simplified();
@@ -136,7 +139,8 @@ impl Polynomial {
             return false;
         }
         for (element1, element2) in simplified_self.0.iter().zip(simplified_other.0.iter()) {
-            if (element1.c - element2.c).abs() > tolerance || (element1.e - element2.e).abs() > tolerance
+            if (element1.c - element2.c).abs() > tolerance
+                || (element1.e - element2.e).abs() > tolerance
             {
                 return false;
             }
@@ -145,6 +149,13 @@ impl Polynomial {
     }
 
     // CONTINUE HERE...and add a slash to the end of the line above.
+}
+
+impl Default for Polynomial {
+    /// Defaults to an empty polynomial.
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 #[cfg(test)]
@@ -748,49 +759,72 @@ mod tests {
     #[test]
     fn test_derivative() {
         let p1 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
-        assert_eq!(Polynomial(vec![Monomial { c: 1_f64, e: 0_f64 }]), p1.derivative());
-
-        let p2 = Polynomial(vec![
-            Monomial { c: 1_f64, e: 1.5_f64 },
-            Monomial { c: 3_f64, e: 1_f64 },
-            Monomial { c: 2_f64, e: 0_f64 },
-            Monomial { c: -0.7_f64, e: -3_f64 },
-        ]);
-        assert!(
-            Polynomial(vec![
-                Monomial { c: 1.5_f64, e: 0.5_f64 },
-                Monomial { c: 3_f64, e: 0_f64 },
-                Monomial { c: 2.1_f64, e: -4_f64 },
-            ]).is_equal_within_tolerance_to(p2.derivative())
+        assert_eq!(
+            Polynomial(vec![Monomial { c: 1_f64, e: 0_f64 }]),
+            p1.derivative()
         );
 
-        // ADD MORE TESTS HERE...
+        let p2 = Polynomial(vec![
+            Monomial {
+                c: 1_f64,
+                e: 1.5_f64,
+            },
+            Monomial { c: 3_f64, e: 1_f64 },
+            Monomial { c: 2_f64, e: 0_f64 },
+            Monomial {
+                c: -0.7_f64,
+                e: -3_f64,
+            },
+        ]);
+        assert!(Polynomial(vec![
+            Monomial {
+                c: 1.5_f64,
+                e: 0.5_f64
+            },
+            Monomial { c: 3_f64, e: 0_f64 },
+            Monomial {
+                c: 2.1_f64,
+                e: -4_f64
+            },
+        ])
+        .is_equal_within_tolerance_to(p2.derivative()));
 
-        
+        // ADD MORE TESTS HERE...
     }
 
     #[test]
-        fn test_is_equal_within_tolerance_to() {
-            // CODE GOES HERE...
-            let p1 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
-            let p2 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
-            assert!(p1.is_equal_within_tolerance_to(p2));
+    fn test_is_equal_within_tolerance_to() {
+        // CODE GOES HERE...
+        let p1 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
+        let p2 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
+        assert!(p1.is_equal_within_tolerance_to(p2));
 
-            let p3 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
-            let p4 = Polynomial(vec![Monomial { c: 1_f64, e: 0_f64 }]);
-            assert!(!p3.is_equal_within_tolerance_to(p4));
+        let p3 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
+        let p4 = Polynomial(vec![Monomial { c: 1_f64, e: 0_f64 }]);
+        assert!(!p3.is_equal_within_tolerance_to(p4));
 
-            let p5 = Polynomial(vec![Monomial { c: -246_f64, e: 0.45_f64 }]);
-            let p6 = Polynomial(vec![Monomial { c: -246_f64, e: 0.45_f64 }]);
-            assert!(p5.is_equal_within_tolerance_to(p6));
+        let p5 = Polynomial(vec![Monomial {
+            c: -246_f64,
+            e: 0.45_f64,
+        }]);
+        let p6 = Polynomial(vec![Monomial {
+            c: -246_f64,
+            e: 0.45_f64,
+        }]);
+        assert!(p5.is_equal_within_tolerance_to(p6));
 
-            let p7 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
-            let p8 = Polynomial(vec![Monomial { c: 1.00000000001_f64, e: 1.00000000001_f64 }]);
-            assert!(p7.is_equal_within_tolerance_to(p8));
+        let p7 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
+        let p8 = Polynomial(vec![Monomial {
+            c: 1.00000000001_f64,
+            e: 1.00000000001_f64,
+        }]);
+        assert!(p7.is_equal_within_tolerance_to(p8));
 
-            let p9 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
-            let p10 = Polynomial(vec![Monomial { c: 0.99999999999_f64, e: 0.99999999999_f64 }]);
-            assert!(p9.is_equal_within_tolerance_to(p10));
-        }
-
+        let p9 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
+        let p10 = Polynomial(vec![Monomial {
+            c: 0.99999999999_f64,
+            e: 0.99999999999_f64,
+        }]);
+        assert!(p9.is_equal_within_tolerance_to(p10));
+    }
 }
