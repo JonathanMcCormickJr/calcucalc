@@ -31,7 +31,7 @@ impl Monomial {
 
 /// A polynomial is a sum of monomials.
 #[derive(Debug, PartialEq)]
-pub struct Polynomial(Vec<Monomial>);
+pub struct Polynomial(pub Vec<Monomial>);
 
 impl Polynomial {
     /// Create new Polynomial
