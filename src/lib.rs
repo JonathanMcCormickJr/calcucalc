@@ -126,6 +126,24 @@ impl Polynomial {
         Polynomial(elements).simplified()
     }
 
+    /// Check if the polynomial is equal to another polynomial within a certain tolerance.
+    /// This function is to overcome floating point arithmetic errors.
+    fn is_equal_within_tolerance_to(&self, other: Polynomial) -> bool {
+        let tolerance = 1e-10;
+        let simplified_self = self.simplified();
+        let simplified_other = other.simplified();
+        if simplified_self.0.len() != simplified_other.0.len() {
+            return false;
+        }
+        for (element1, element2) in simplified_self.0.iter().zip(simplified_other.0.iter()) {
+            if (element1.c - element2.c).abs() > tolerance || (element1.e - element2.e).abs() > tolerance
+            {
+                return false;
+            }
+        }
+        true
+    }
+
     // CONTINUE HERE...and add a slash to the end of the line above.
 }
 
@@ -738,16 +756,41 @@ mod tests {
             Monomial { c: 2_f64, e: 0_f64 },
             Monomial { c: -0.7_f64, e: -3_f64 },
         ]);
-        assert_eq!(
+        assert!(
             Polynomial(vec![
                 Monomial { c: 1.5_f64, e: 0.5_f64 },
                 Monomial { c: 3_f64, e: 0_f64 },
                 Monomial { c: 2.1_f64, e: -4_f64 },
-            ]),
-            p2.derivative()
+            ]).is_equal_within_tolerance_to(p2.derivative())
         );
 
         // ADD MORE TESTS HERE...
+
+        
     }
+
+    #[test]
+        fn test_is_equal_within_tolerance_to() {
+            // CODE GOES HERE...
+            let p1 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
+            let p2 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
+            assert!(p1.is_equal_within_tolerance_to(p2));
+
+            let p3 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
+            let p4 = Polynomial(vec![Monomial { c: 1_f64, e: 0_f64 }]);
+            assert!(!p3.is_equal_within_tolerance_to(p4));
+
+            let p5 = Polynomial(vec![Monomial { c: -246_f64, e: 0.45_f64 }]);
+            let p6 = Polynomial(vec![Monomial { c: -246_f64, e: 0.45_f64 }]);
+            assert!(p5.is_equal_within_tolerance_to(p6));
+
+            let p7 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
+            let p8 = Polynomial(vec![Monomial { c: 1.00000000001_f64, e: 1.00000000001_f64 }]);
+            assert!(p7.is_equal_within_tolerance_to(p8));
+
+            let p9 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
+            let p10 = Polynomial(vec![Monomial { c: 0.99999999999_f64, e: 0.99999999999_f64 }]);
+            assert!(p9.is_equal_within_tolerance_to(p10));
+        }
 
 }
