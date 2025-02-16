@@ -41,7 +41,7 @@ impl Polynomial {
     /// Simplify the polynomial
     /// This function simplifies the polynomial by combining elements of the same power of x, and then sorting the elements by the exponent of x (in descending order).
     fn simplified(&self) -> Polynomial {
-        self.simplify_by_combining_alike_powers().sort_by_exponent()
+        self.simplify_by_combining_alike_powers().eliminate_zero_coefficients().sort_by_exponent()
     }
 
     /// Combine elements of same powers
@@ -74,6 +74,19 @@ impl Polynomial {
         simplified_elements
     }
 
+    /// Eliminate elements with zero coefficients.
+    /// This function eliminates elements with the coefficient `0` from the polynomial.
+    fn eliminate_zero_coefficients(&self) -> Polynomial {
+        let elements = &self.0;
+        let mut new_elements = vec![];
+        for element in elements {
+            if element.c != 0_f64 {
+                new_elements.push(element.clone());
+            }
+        }
+        Polynomial(new_elements)
+    }
+
     /// Sort the elements of the polynomial by the exponent of x.
     fn sort_by_exponent(&self) -> Polynomial {
         let mut elements = self.0.clone();
@@ -100,6 +113,17 @@ impl Polynomial {
         }
         let new_polynomial = Polynomial(elements);
         new_polynomial.simplified()
+    }
+
+    fn derivative(&self) -> Polynomial {
+        let mut elements = vec![];
+        for element in &self.0 {
+            elements.push(Monomial {
+                c: element.c * element.e,
+                e: element.e - 1_f64,
+            });
+        }
+        Polynomial(elements).simplified()
     }
 
     // CONTINUE HERE...and add a slash to the end of the line above.
@@ -702,5 +726,28 @@ mod tests {
         ]);
         assert_eq!(p6, p4.multiply_polynomial(p5));
     }
-    // RESUME HERE BY IMPLEMENTING TESTS FOR THE POLYNOMIAL STRUCT.
+
+    #[test]
+    fn test_derivative() {
+        let p1 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
+        assert_eq!(Polynomial(vec![Monomial { c: 1_f64, e: 0_f64 }]), p1.derivative());
+
+        let p2 = Polynomial(vec![
+            Monomial { c: 1_f64, e: 1.5_f64 },
+            Monomial { c: 3_f64, e: 1_f64 },
+            Monomial { c: 2_f64, e: 0_f64 },
+            Monomial { c: -0.7_f64, e: -3_f64 },
+        ]);
+        assert_eq!(
+            Polynomial(vec![
+                Monomial { c: 1.5_f64, e: 0.5_f64 },
+                Monomial { c: 3_f64, e: 0_f64 },
+                Monomial { c: 2.1_f64, e: -4_f64 },
+            ]),
+            p2.derivative()
+        );
+
+        // ADD MORE TESTS HERE...
+    }
+
 }
