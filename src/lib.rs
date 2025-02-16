@@ -4,8 +4,8 @@
 /// A monomial is a product of a coefficient and a power of x.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Monomial {
-    c: f64, // Coefficient
-    e: f64, // Exponent
+    pub c: f64, // Coefficient
+    pub e: f64, // Exponent
 }
 
 impl Monomial {
