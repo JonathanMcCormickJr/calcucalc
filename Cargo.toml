@@ -2,5 +2,9 @@
 name = "calcucalc"
 version = "0.1.0"
 edition = "2021"
+authors = ["Jonathan A. McCormick Jr."]
+license = "MIT"
+repository = "https://github.com/JonathanMcCormickJr/calcucalc"
+description = "A general-purpose calculus library written in Rust."
 
 [dependencies]
