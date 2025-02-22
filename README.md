@@ -15,5 +15,5 @@ The documentation for this project can be found [here](https://docs.rs/calcucalc
 
 ## ⛓️‍💥 License
 
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/JonathanMcCormickJr/calcucalc/blob/master/LICENSE) file for details.
 

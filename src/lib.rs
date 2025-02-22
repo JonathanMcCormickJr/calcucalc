@@ -15,7 +15,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! calcucalc = "0.1"
+//! calcucalc = "VERSION_GOES_HERE"
 //! ```
 //!
 //! ## 🛠️ Usage
@@ -44,6 +44,7 @@
 //! f'(x) = 2x + 2
 //! ```
 //!
+//! <!-- CONTINUE HERE WITH MORE DOCUMENTATION EXAMPLES... -->
 //!
 //!
 //!
