@@ -38,6 +38,11 @@
 //! }
 //! ```
 //!
+//! The above code does the same as the following mathematical expression:
+//! ```math
+//! f(x) = x^2 + 2x + 3
+//! f'(x) = 2x + 2
+//! ```
 //!
 //!
 //!
