@@ -776,18 +776,20 @@ mod tests {
                 e: -3_f64,
             },
         ]);
-        assert!(Polynomial(vec![
-            Monomial {
-                c: 1.5_f64,
-                e: 0.5_f64
-            },
-            Monomial { c: 3_f64, e: 0_f64 },
-            Monomial {
-                c: 2.1_f64,
-                e: -4_f64
-            },
-        ])
-        .is_equal_within_tolerance_to(p2.derivative()));
+        assert!(
+            Polynomial(vec![
+                Monomial {
+                    c: 1.5_f64,
+                    e: 0.5_f64
+                },
+                Monomial { c: 3_f64, e: 0_f64 },
+                Monomial {
+                    c: 2.1_f64,
+                    e: -4_f64
+                },
+            ])
+            .is_equal_within_tolerance_to(p2.derivative())
+        );
 
         // ADD MORE TESTS HERE...
     }
