@@ -43,15 +43,13 @@
 //! f(x) = x^2 + 2x + 3
 //! f'(x) = 2x + 2
 //! ```
+//! 
 //!
 //!
 //!
 //!
 //!
-//!
-//! ## License
-//!
-//! This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+//! 
 //!
 //!
 //!
