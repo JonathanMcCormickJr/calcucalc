@@ -1,15 +1,15 @@
 #![doc = include_str!("../README.md")]
 #![forbid(unsafe_code)]
 
-//! ## Getting Started
+//! ## 🌱 Getting Started
 
 //! The goal of this project is to provide a simple and easy-to-use library for doing calculus operations.
 //!
-//! ### Prerequisites
+//! ### 🦀 Prerequisites
 //!
 //! You will need to have Rust installed on your machine. You can install Rust by following the instructions [here](https://www.rust-lang.org/tools/install).
 //!
-//! ### Installing
+//! ### 🖥️ Installing
 //!
 //! To install the library, add the following to your `Cargo.toml` file:
 //!
@@ -18,7 +18,7 @@
 //! calcucalc = "0.1"
 //! ```
 //!
-//! ## Usage
+//! ## 🛠️ Usage
 //!
 //! Here are examples of how to use this library:
 //!
@@ -43,13 +43,13 @@
 //! f(x) = x^2 + 2x + 3
 //! f'(x) = 2x + 2
 //! ```
-//! 
 //!
 //!
 //!
 //!
 //!
-//! 
+//!
+//!
 //!
 //!
 //!
