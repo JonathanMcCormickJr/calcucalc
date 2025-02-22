@@ -9,7 +9,5 @@ This is very much a work in progress at this stage. Feel free to contribute any 
 - [ ] nth-power derivatives of polynomials
 - [ ] Suggest more features here. 
 
-## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 

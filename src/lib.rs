@@ -1,6 +1,60 @@
 #![doc = include_str!("../README.md")]
 #![forbid(unsafe_code)]
 
+//! ## Getting Started
+
+//! The goal of this project is to provide a simple and easy-to-use library for doing calculus operations.
+//!
+//! ### Prerequisites
+//!
+//! You will need to have Rust installed on your machine. You can install Rust by following the instructions [here](https://www.rust-lang.org/tools/install).
+//!
+//! ### Installing
+//!
+//! To install the library, add the following to your `Cargo.toml` file:
+//!
+//! ```toml
+//! [dependencies]
+//! calcucalc = "0.1"
+//! ```
+//!
+//! ## Usage
+//!
+//! Here are examples of how to use this library:
+//!
+//! ### Calculating the derivative of a polynomial
+//!
+//! ```rust
+//! use calcucalc::{Monomial, Polynomial};
+//!
+//! fn main() {
+//!     let mut my_polynomial = Polynomial(vec![
+//!         Monomial { c: 1.0, e: 2.0 },
+//!         Monomial { c: 2.0, e: 1.0 },
+//!         Monomial { c: 3.0, e: 0.0 },
+//!     ]);
+//!     let my_derivative = my_polynomial.derivative();
+//!     assert_eq!(my_derivative, Polynomial(vec![Monomial { c: 2.0, e: 1.0 }, Monomial { c: 2.0, e: 0.0 }]));
+//! }
+//! ```
+//!
+//!
+//!
+//!
+//!
+//!
+//!
+//! ## License
+//!
+//! This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+//!
+//!
+//!
+//!
+//!
+//!
+//!
+
 /// A monomial is a product of a coefficient and a power of x.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Monomial {
@@ -25,6 +79,15 @@ impl Monomial {
         Monomial {
             c: self.c * other.c,
             e: self.e + other.e,
+        }
+    }
+
+    /// Calculate the derivative of the monomial.
+    /// The derivative of a monomial is the product of the exponent and the coefficient, times x raised to the power of the exponent minus one.
+    pub fn monomial_derivative(&self) -> Monomial {
+        Monomial {
+            c: self.c * self.e,
+            e: self.e - 1_f64,
         }
     }
 }
@@ -121,10 +184,7 @@ impl Polynomial {
     pub fn derivative(&self) -> Polynomial {
         let mut elements = vec![];
         for element in &self.0 {
-            elements.push(Monomial {
-                c: element.c * element.e,
-                e: element.e - 1_f64,
-            });
+            elements.push(element.monomial_derivative());
         }
         Polynomial(elements).simplified()
     }
