@@ -20,46 +20,32 @@
 //!
 //! ## 🛠️ Usage
 //!
-//! Here are examples of how to use this library:
-//!
-//! ### Calculating the derivative of a polynomial
-//!
-//! ```rust
-//! use calcucalc::{Monomial, Polynomial};
-//!
-//! fn main() {
-//!     let mut my_polynomial = Polynomial(vec![
-//!         Monomial { c: 1.0, e: 2.0 },
-//!         Monomial { c: 2.0, e: 1.0 },
-//!         Monomial { c: 3.0, e: 0.0 },
-//!     ]);
-//!     let my_derivative = my_polynomial.derivative();
-//!     assert_eq!(my_derivative, Polynomial(vec![Monomial { c: 2.0, e: 1.0 }, Monomial { c: 2.0, e: 0.0 }]));
-//! }
-//! ```
-//!
-//! The above code does the same as the following mathematical expression:
-//! ```math
-//! f(x) = x^2 + 2x + 3
-//! f'(x) = 2x + 2
-//! ```
-//!
-//! <!-- CONTINUE HERE WITH MORE DOCUMENTATION EXAMPLES... -->
-//!
-//!
-//!
-//!
-//!
-//!
-//!
-//!
-//!
-//!
-//!
+//! This documentation provides examples of how to use the library. Just navigate to the item you want to learn more about, and the description and examples will be there.
 //!
 //!
 
-/// A monomial is a product of a coefficient and a power of x.
+/// A monomial is a product of a coefficient and an exponent of x.
+/// For example, in the monomial `3x^2`, the coefficient is `3` and the exponent of x is `2`.
+/// The monomial `3x^2` can be represented as a struct with the coefficient `3` and the exponent `2`.
+/// The monomial `3x^2` can be represented as `Monomial { c: 3.0, e: 2.0 }`.
+/// 
+/// This library is intended to be as general-purpose as possible, which is why the coefficient and exponent are represented as floating-point numbers (as opposed to integers). This allows for more flexibility in the types of functions that can be represented.
+///
+/// Here is a table showing example monomials and their corresponding struct representations:
+/// | Monomial | Struct Representation |
+/// | --- | --- |
+/// | `3x^2` | `Monomial { c: 3.0, e: 2.0 }` |
+/// | `2x` | `Monomial { c: 2.0, e: 1.0 }` |
+/// | `1` | `Monomial { c: 1.0, e: 0.0 }` |
+/// | `0` | `Monomial { c: 0.0, e: 0.0 }` |
+/// | `5x^-1` aka `5/x` | `Monomial { c: 5.0, e: -1.0 }` |
+/// | `3x^-2` aka `3/(x^2)` | `Monomial { c: 3.0, e: -2.0 }` |
+/// | `2x^0.5` aka `2 * √x` | `Monomial { c: 2.0, e: 0.5 }` |
+/// | `1.5x^0.25` aka `1.5 * ∜x` | `Monomial { c: 1.5, e: 0.25 }` |
+/// | `2x^π` | `Monomial { c: 2.0, e: 3.141592653589793 }` |
+/// | `3x^e` | `Monomial { c: 3.0, e: 2.718281828459045 }` |
+/// 
+/// 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Monomial {
     pub c: f64, // Coefficient
@@ -67,7 +53,7 @@ pub struct Monomial {
 }
 
 impl Monomial {
-    /// Add one monomial to another, if they have the same power of x.
+    /// Add one monomial to another, if they have the same exponent of x.
     pub fn add_monomial_of_same_power(&self, other: Monomial) -> Monomial {
         if self.e != other.e {
             panic!("Cannot add monomials with different powers of x.");
@@ -107,7 +93,7 @@ impl Polynomial {
     }
 
     /// Simplify the polynomial
-    /// This function simplifies the polynomial by combining elements of the same power of x, and then sorting the elements by the exponent of x (in descending order).
+    /// This function simplifies the polynomial by combining elements which have the same exponent of x, and then sorting the elements by the exponent of x (in descending order).
     pub fn simplified(&self) -> Polynomial {
         self.simplify_by_combining_alike_powers()
             .eliminate_zero_coefficients()
@@ -185,6 +171,29 @@ impl Polynomial {
         new_polynomial.simplified()
     }
 
+    /// Calculate the derivative of the polynomial.
+    /// The derivative of a polynomial is the sum of the derivatives of each monomial in the polynomial.
+    /// Here are examples of how to use this library:
+    ///
+    /// ### Calculating the derivative of a polynomial
+    ///
+    /// ```rust
+    /// use calcucalc::{Monomial, Polynomial};
+    ///
+    /// let mut my_polynomial = Polynomial(vec![
+    /// Monomial { c: 1.0, e: 2.0 },
+    /// Monomial { c: 2.0, e: 1.0 },
+    /// Monomial { c: 3.0, e: 0.0 },
+    /// ]);
+    /// let my_derivative = my_polynomial.derivative();
+    /// assert_eq!(my_derivative, Polynomial(vec![Monomial { c: 2.0, e: 1.0 }, Monomial { c: 2.0, e: 0.0 }]));
+    /// ```
+    ///
+    /// The above code does the same as the following mathematical expression:
+    /// ```math
+    /// f(x) = x^2 + 2x + 3
+    /// f'(x) = 2x + 2
+    /// ```
     pub fn derivative(&self) -> Polynomial {
         let mut elements = vec![];
         for element in &self.0 {
