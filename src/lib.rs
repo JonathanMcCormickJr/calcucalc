@@ -26,9 +26,8 @@
 
 /// A monomial is a product of a coefficient and an exponent of x.
 /// For example, in the monomial `3x^2`, the coefficient is `3` and the exponent of x is `2`.
-/// The monomial `3x^2` can be represented as a struct with the coefficient `3` and the exponent `2`.
-/// The monomial `3x^2` can be represented as `Monomial { c: 3.0, e: 2.0 }`.
-/// 
+/// The monomial `3x^2` can be represented as a struct with the coefficient `3` and the exponent `2`, which this library represents as `Monomial { c: 3.0, e: 2.0 }`.
+///
 /// This library is intended to be as general-purpose as possible, which is why the coefficient and exponent are represented as floating-point numbers (as opposed to integers). This allows for more flexibility in the types of functions that can be represented.
 ///
 /// Here is a table showing example monomials and their corresponding struct representations:
@@ -44,8 +43,7 @@
 /// | `1.5x^0.25` aka `1.5 * ∜x` | `Monomial { c: 1.5, e: 0.25 }` |
 /// | `2x^π` | `Monomial { c: 2.0, e: 3.141592653589793 }` |
 /// | `3x^e` | `Monomial { c: 3.0, e: 2.718281828459045 }` |
-/// 
-/// 
+///
 #[derive(Clone, Debug, PartialEq)]
 pub struct Monomial {
     pub c: f64, // Coefficient
@@ -54,6 +52,16 @@ pub struct Monomial {
 
 impl Monomial {
     /// Add one monomial to another, if they have the same exponent of x.
+    ///
+    /// #### Example
+    /// ```rust
+    /// use calcucalc::Monomial;
+    ///
+    /// let m1 = Monomial { c: 1.0, e: 3.141592653589793 };
+    /// let m2 = Monomial { c: 2.0, e: 3.141592653589793 };
+    /// let m3 = Monomial { c: 3.0, e: 3.141592653589793 };
+    /// assert_eq!(m3, m1.add_monomial_of_same_power(m2));
+    /// ```
     pub fn add_monomial_of_same_power(&self, other: Monomial) -> Monomial {
         if self.e != other.e {
             panic!("Cannot add monomials with different powers of x.");
@@ -65,6 +73,16 @@ impl Monomial {
     }
 
     /// Multiply one monomial by another.
+    ///
+    /// #### Example
+    /// ```rust
+    /// use calcucalc::Monomial;
+    ///
+    /// let m1 = Monomial { c: 1.0, e: 3.141592653589793 };
+    /// let m2 = Monomial { c: 2.0, e: 3.141592653589793 };
+    /// let m3 = Monomial { c: 2.0, e: 6.283185307179586 };
+    /// assert_eq!(m3, m1.multiply_monomial(m2));
+    /// ```
     pub fn multiply_monomial(&self, other: Monomial) -> Monomial {
         Monomial {
             c: self.c * other.c,
@@ -74,6 +92,15 @@ impl Monomial {
 
     /// Calculate the derivative of the monomial.
     /// The derivative of a monomial is the product of the exponent and the coefficient, times x raised to the power of the exponent minus one.
+    ///
+    /// #### Example
+    /// ```rust
+    /// use calcucalc::Monomial;
+    ///
+    /// let m = Monomial { c: 1.0, e: 3.141592653589793 };
+    /// let m_derivative = Monomial { c: 3.141592653589793, e: 2.141592653589793 };
+    /// assert_eq!(m_derivative, m.monomial_derivative());
+    /// ```
     pub fn monomial_derivative(&self) -> Monomial {
         Monomial {
             c: self.c * self.e,
@@ -83,17 +110,62 @@ impl Monomial {
 }
 
 /// A polynomial is a sum of monomials.
+/// For example, the polynomial `3x^2 + 2x + 1` can be represented as a vector of monomials, which is how this library represents it.
+///
+/// #### Example
+/// ```rust
+/// use calcucalc::{Monomial, Polynomial};
+///
+/// let my_polynomial = Polynomial(vec![
+///    Monomial { c: 3.0, e: 2.0 },
+///    Monomial { c: 2.0, e: 1.0 },
+///    Monomial { c: 1.0, e: 0.0 },
+/// ]);
+/// ```
 #[derive(Debug, PartialEq)]
 pub struct Polynomial(pub Vec<Monomial>);
 
 impl Polynomial {
-    /// Create new Polynomial
+    /// This function creates a new polynomial with no monomials.
+    ///
+    /// #### Example
+    /// ```rust
+    /// use calcucalc::Polynomial;
+    ///
+    /// let my_polynomial = Polynomial::new();
+    /// assert_eq!(my_polynomial.0.len(), 0)
+    /// ```
     pub fn new() -> Polynomial {
         Polynomial(vec![])
     }
 
-    /// Simplify the polynomial
     /// This function simplifies the polynomial by combining elements which have the same exponent of x, and then sorting the elements by the exponent of x (in descending order).
+    ///
+    /// This function is equivalent to calling `simplify_by_combining_alike_powers()`, `eliminate_zero_coefficients()`, and `sort_by_exponent()` in sequence.
+    ///
+    /// #### Example
+    /// ```rust
+    /// use calcucalc::{Monomial, Polynomial};
+    ///
+    /// let my_polynomial = Polynomial(vec![
+    ///     Monomial { c: 1.0, e: 2.0 },
+    ///     Monomial { c: -5.0, e: 0.0 },
+    ///     Monomial { c: 2.0, e: 2.0 },
+    ///     Monomial { c: 2.0, e: 1.0 },
+    ///     Monomial { c: 0.0, e: 1.0 },
+    ///     Monomial { c: 3.0, e: 0.0 },
+    ///     Monomial { c: 500.0, e: 0.453 },
+    ///     Monomial { c: -500.0, e: 0.453 },
+    /// ]);
+    ///
+    /// let simplified_polynomial = my_polynomial.simplified();
+    ///
+    /// assert_eq!(simplified_polynomial, Polynomial(vec![
+    ///     Monomial { c: 3.0, e: 2.0 },
+    ///     Monomial { c: 2.0, e: 1.0 },
+    ///     Monomial { c: -2.0, e: 0.0 },
+    /// ]));
+    /// ```
     pub fn simplified(&self) -> Polynomial {
         self.simplify_by_combining_alike_powers()
             .eliminate_zero_coefficients()
@@ -101,6 +173,8 @@ impl Polynomial {
     }
 
     /// Combine elements of same powers
+    ///
+    /// RESUME DOC UPDATING HERE...
     pub fn simplify_by_combining_alike_powers(&self) -> Polynomial {
         let elements = &self.0;
         let mut simplified_elements = Polynomial::new();
