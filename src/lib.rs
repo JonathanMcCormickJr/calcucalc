@@ -152,7 +152,7 @@ impl Default for Monomial {
 ///    Monomial { c: 1.0, e: 0.0 },
 /// ]);
 /// ```
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Polynomial(pub Vec<Monomial>);
 
 impl Polynomial {
@@ -400,6 +400,50 @@ impl Polynomial {
             elements.push(element.monomial_derivative());
         }
         Polynomial(elements).simplified()
+    }
+
+    /// Calculates the nth derivative of the polynomial.
+    ///
+    /// The nth derivative of a polynomial is the result of taking the derivative of the polynomial `n` times.
+    ///
+    /// #### Example
+    /// ```rust
+    /// use calcucalc::{Monomial, Polynomial};
+    ///
+    /// let my_polynomial = Polynomial(vec![
+    ///     Monomial { c: 1.0, e: 2.0 },
+    ///     Monomial { c: 2.0, e: 1.0 },
+    ///     Monomial { c: 3.0, e: 0.0 },
+    /// ]);
+    /// let my_nth_derivative = my_polynomial.nth_derivative(2);
+    /// assert_eq!(my_nth_derivative, Polynomial(vec![Monomial { c: 2.0, e: 0.0 }]));
+    /// ```
+    ///
+    /// The above code does the same as the following mathematical expression:
+    /// ```math
+    /// f(x) = x^2 + 2x + 3
+    /// f''(x) = 2
+    /// ```
+    ///
+    /// Let's level up the complexity a bit:
+    /// ```rust
+    /// use calcucalc::{Monomial, Polynomial};
+    ///
+    /// let my_polynomial = Polynomial(vec![
+    ///     Monomial { c: 1.0, e: 3.0 },
+    ///     Monomial { c: 2.0, e: 2.0 },
+    ///     Monomial { c: 3.0, e: 1.0 },
+    ///     Monomial { c: 4.0, e: 0.0 },
+    /// ]);
+    /// let my_nth_derivative = my_polynomial.nth_derivative(3);
+    /// assert_eq!(my_nth_derivative, Polynomial(vec![Monomial { c: 6.0, e: 0.0 }]));  // The third derivative of a constant is always 0.
+    /// ```
+    pub fn nth_derivative(&self, n: u32) -> Polynomial {
+        let mut new_polynomial = self.clone();
+        for _ in 0..n {
+            new_polynomial = new_polynomial.derivative();
+        }
+        new_polynomial
     }
 
     /// Checks if the polynomial is equal to another polynomial within a certain tolerance.
@@ -1128,5 +1172,25 @@ mod tests {
             e: 0.99999999999_f64,
         }]);
         assert!(p9.is_equal_within_tolerance_to(p10));
+    }
+
+    #[test]
+    fn test_nth_derivative() {
+        let p1 = Polynomial(vec![
+            Monomial { c: 1_f64, e: 4_f64 },
+            Monomial {
+                c: -6_f64,
+                e: 3_f64,
+            },
+            Monomial { c: 2_f64, e: 2_f64 },
+            Monomial { c: 3_f64, e: 1_f64 },
+        ]);
+        assert_eq!(
+            p1.nth_derivative(3),
+            Polynomial(vec![
+                Monomial { c: 24.0, e: 1.0 },
+                Monomial { c: -36.0, e: 0.0 }
+            ])
+        );
     }
 }
