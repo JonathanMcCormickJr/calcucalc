@@ -6,7 +6,7 @@ This is very much a work in progress at this stage. Feel free to contribute any 
 
 ## 🌠 Features
 - [x] Derivatives of polynomials
-- [ ] nth-power derivatives of polynomials
+- [x] nth-power derivatives of polynomials
 - [ ] Suggest more features here. 
 
 ## 📄 Documentation
