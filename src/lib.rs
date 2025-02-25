@@ -51,7 +51,20 @@ pub struct Monomial {
 }
 
 impl Monomial {
-    /// Add one monomial to another, if they have the same exponent of x.
+    /// Creates a new monomial
+    ///
+    /// #### Example
+    /// ```rust
+    /// use calcucalc::Monomial;
+    ///
+    /// let m = Monomial::new(1.0, 2.0);
+    /// assert_eq!(m, Monomial { c: 1.0, e: 2.0 });
+    /// ```
+    pub fn new(c: f64, e: f64) -> Monomial {
+        Monomial { c, e }
+    }
+
+    /// Adds one monomial to another, if they have the same exponent of x.
     ///
     /// #### Example
     /// ```rust
@@ -72,7 +85,7 @@ impl Monomial {
         }
     }
 
-    /// Multiply one monomial by another.
+    /// Multiplies one monomial by another.
     ///
     /// #### Example
     /// ```rust
@@ -90,7 +103,7 @@ impl Monomial {
         }
     }
 
-    /// Calculate the derivative of the monomial.
+    /// Calculates the derivative of the monomial.
     /// The derivative of a monomial is the product of the exponent and the coefficient, times x raised to the power of the exponent minus one.
     ///
     /// #### Example
@@ -106,6 +119,23 @@ impl Monomial {
             c: self.c * self.e,
             e: self.e - 1_f64,
         }
+    }
+}
+
+impl Default for Monomial {
+    /// Defaults to a monomial with a coefficient of `0` and an exponent of `0`.
+    ///
+    /// This is equivalent to the monomial `0`.
+    ///
+    /// #### Example
+    /// ```rust
+    /// use calcucalc::Monomial;
+    ///
+    /// let m = Monomial::default();
+    /// assert_eq!(m, Monomial { c: 0.0, e: 0.0 });
+    /// ```
+    fn default() -> Self {
+        Self::new(0_f64, 0_f64)
     }
 }
 
@@ -126,7 +156,7 @@ impl Monomial {
 pub struct Polynomial(pub Vec<Monomial>);
 
 impl Polynomial {
-    /// This function creates a new polynomial with no monomials.
+    /// Creates a new polynomial with no monomials.
     ///
     /// #### Example
     /// ```rust
@@ -139,9 +169,11 @@ impl Polynomial {
         Polynomial(vec![])
     }
 
-    /// This function simplifies the polynomial by combining elements which have the same exponent of x, and then sorting the elements by the exponent of x (in descending order).
+    /// Simplifies the polynomial by combining elements which have the same exponent of x, and then sorting the elements by the exponent of x (in descending order).
     ///
     /// This function is equivalent to calling `simplify_by_combining_alike_powers()`, `eliminate_zero_coefficients()`, and `sort_by_exponent()` in sequence.
+    ///
+    /// In most cases, if you want to simplify a polynomial, you should use this function.
     ///
     /// #### Example
     /// ```rust
@@ -172,9 +204,22 @@ impl Polynomial {
             .sort_by_exponent()
     }
 
-    /// Combine elements of same powers
+    /// Combines elements which have the same exponent of x.
     ///
-    /// RESUME DOC UPDATING HERE...
+    /// #### Example
+    /// ```rust
+    /// use calcucalc::{Monomial, Polynomial};
+    ///
+    /// let my_polynomial = Polynomial(vec![
+    ///     Monomial { c: 1.0, e: 2.0 },
+    ///     Monomial { c: 2.0, e: 2.0 },
+    ///     Monomial { c: 3.0, e: 2.0 },
+    /// ]);
+    /// let simplified_polynomial = my_polynomial.simplify_by_combining_alike_powers();
+    /// assert_eq!(simplified_polynomial, Polynomial(vec![
+    ///     Monomial { c: 6.0, e: 2.0 },
+    /// ]));
+    /// ```
     pub fn simplify_by_combining_alike_powers(&self) -> Polynomial {
         let elements = &self.0;
         let mut simplified_elements = Polynomial::new();
@@ -204,8 +249,23 @@ impl Polynomial {
         simplified_elements
     }
 
-    /// Eliminate elements with zero coefficients.
-    /// This function eliminates elements with the coefficient `0` from the polynomial.
+    /// Eliminates elements with coefficients of `0`.
+    ///
+    /// As `0` multiplied by any number is `0`, elements with a coefficient of `0` do not affect the value of the polynomial, and can be safely ignored.
+    ///
+    /// #### Example
+    /// ```rust
+    /// use calcucalc::{Monomial, Polynomial};
+    ///
+    /// let my_polynomial = Polynomial(vec![
+    ///     Monomial { c: 1.0, e: 2.0 },
+    ///     Monomial { c: 0.0, e: 1.0 },
+    /// ]);
+    /// let simplified_polynomial = my_polynomial.eliminate_zero_coefficients();
+    /// assert_eq!(simplified_polynomial, Polynomial(vec![
+    ///    Monomial { c: 1.0, e: 2.0 },
+    /// ]));
+    /// ```
     pub fn eliminate_zero_coefficients(&self) -> Polynomial {
         let elements = &self.0;
         let mut new_elements = vec![];
@@ -217,14 +277,58 @@ impl Polynomial {
         Polynomial(new_elements)
     }
 
-    /// Sort the elements of the polynomial by the exponent of x.
+    /// Sorts the elements of the polynomial by the exponent of x (in descending order).
+    ///
+    /// #### Example
+    /// ```rust
+    /// use calcucalc::{Monomial, Polynomial};
+    ///
+    /// let my_polynomial = Polynomial(vec![
+    ///     Monomial { c: 3.0, e: -2.0 },
+    ///     Monomial { c: 3.0, e: 0.0 },
+    ///     Monomial { c: 3.0, e: 0.5 },
+    ///     Monomial { c: 3.0, e: 25.4 },
+    ///     Monomial { c: 3.0, e: 0.0 },
+    ///     Monomial { c: 3.0, e: 12.0 },
+    /// ]);
+    /// let sorted_polynomial = my_polynomial.sort_by_exponent();
+    /// assert_eq!(sorted_polynomial, Polynomial(vec![
+    ///     Monomial { c: 3.0, e: 25.4 },
+    ///     Monomial { c: 3.0, e: 12.0 },
+    ///     Monomial { c: 3.0, e: 0.5 },
+    ///     Monomial { c: 3.0, e: 0.0 },
+    ///     Monomial { c: 3.0, e: 0.0 },  // Does not perform any combination of elements with the same exponent. Only sorts.
+    ///     Monomial { c: 3.0, e: -2.0 },
+    /// ]));
+    /// ```
     pub fn sort_by_exponent(&self) -> Polynomial {
         let mut elements = self.0.clone();
         elements.sort_by(|a, b| b.e.partial_cmp(&a.e).unwrap());
         Polynomial(elements)
     }
 
-    /// Add one polynomial to another.
+    /// Adds one polynomial to another.
+    ///
+    /// #### Example
+    /// ```rust
+    /// use calcucalc::{Monomial, Polynomial};
+    ///
+    /// let my_polynomial1 = Polynomial(vec![
+    ///     Monomial { c: 1.0, e: 2.0 },
+    ///     Monomial { c: 2.0, e: 1.0 },
+    /// ]);
+    /// let my_polynomial2 = Polynomial(vec![
+    ///     Monomial { c: 3.0, e: 2.0 },
+    ///     Monomial { c: 4.0, e: 1.0 },
+    /// ]);
+    /// let my_sum = my_polynomial1.add_polynomial(my_polynomial2);
+    /// assert_eq!(my_sum, Polynomial(vec![
+    ///     Monomial { c: 4.0, e: 2.0 },
+    ///     Monomial { c: 6.0, e: 1.0 },
+    /// ]));
+    /// ```
+    ///
+    /// `add_polynomial()` itself calls `simplified()` before returning the result.
     pub fn add_polynomial(&self, other: Polynomial) -> Polynomial {
         let mut elements = self.0.clone();
         elements.extend(other.0.clone());
@@ -232,8 +336,29 @@ impl Polynomial {
         new_polynomial.simplified()
     }
 
-    /// Multiply one polynomial by another.
-    /// This function multiplies each element of the first polynomial by each element of the second polynomial, and then simplifies the result.
+    /// Multiplies one polynomial by another.
+    ///
+    /// #### Example
+    /// ```rust
+    /// use calcucalc::{Monomial, Polynomial};
+    ///
+    /// let my_polynomial1 = Polynomial(vec![
+    ///    Monomial { c: 1.0, e: 2.0 },
+    ///    Monomial { c: 2.0, e: 1.0 },
+    /// ]);
+    /// let my_polynomial2 = Polynomial(vec![
+    ///    Monomial { c: 4.0, e: 1.0 },
+    ///    Monomial { c: 3.0, e: 2.0 },
+    /// ]);
+    /// let my_product = my_polynomial1.multiply_polynomial(my_polynomial2);
+    /// assert_eq!(my_product, Polynomial(vec![
+    ///    Monomial { c: 3.0, e: 4.0 },
+    ///    Monomial { c: 10.0, e: 3.0 },
+    ///    Monomial { c: 8.0, e: 2.0 },
+    /// ]));
+    /// ```
+    ///
+    /// `multiply_polynomial()` itself calls `simplified()` before returning the result.
     pub fn multiply_polynomial(&self, other: Polynomial) -> Polynomial {
         let mut elements = vec![];
         for element1 in &self.0 {
@@ -245,19 +370,18 @@ impl Polynomial {
         new_polynomial.simplified()
     }
 
-    /// Calculate the derivative of the polynomial.
+    /// Calculates the derivative of the polynomial.
+    ///
     /// The derivative of a polynomial is the sum of the derivatives of each monomial in the polynomial.
-    /// Here are examples of how to use this library:
     ///
-    /// ### Calculating the derivative of a polynomial
-    ///
+    /// #### Example
     /// ```rust
     /// use calcucalc::{Monomial, Polynomial};
     ///
     /// let mut my_polynomial = Polynomial(vec![
-    /// Monomial { c: 1.0, e: 2.0 },
-    /// Monomial { c: 2.0, e: 1.0 },
-    /// Monomial { c: 3.0, e: 0.0 },
+    ///     Monomial { c: 1.0, e: 2.0 },
+    ///     Monomial { c: 2.0, e: 1.0 },
+    ///     Monomial { c: 3.0, e: 0.0 },
     /// ]);
     /// let my_derivative = my_polynomial.derivative();
     /// assert_eq!(my_derivative, Polynomial(vec![Monomial { c: 2.0, e: 1.0 }, Monomial { c: 2.0, e: 0.0 }]));
@@ -268,6 +392,8 @@ impl Polynomial {
     /// f(x) = x^2 + 2x + 3
     /// f'(x) = 2x + 2
     /// ```
+    ///
+    /// `derivative()` itself calls `simplified()` before returning the result.
     pub fn derivative(&self) -> Polynomial {
         let mut elements = vec![];
         for element in &self.0 {
@@ -276,8 +402,26 @@ impl Polynomial {
         Polynomial(elements).simplified()
     }
 
-    /// Check if the polynomial is equal to another polynomial within a certain tolerance.
+    /// Checks if the polynomial is equal to another polynomial within a certain tolerance.
+    ///
     /// This function is to overcome floating point arithmetic errors.
+    ///
+    /// #### Example
+    /// ```rust
+    /// use calcucalc::{Monomial, Polynomial};
+    ///
+    /// let my_polynomial1 = Polynomial(vec![
+    ///     Monomial { c: 1.0, e: 2.000000000001 },
+    ///     Monomial { c: 1.999999999999, e: 1.0 },
+    /// ]);
+    /// let my_polynomial2 = Polynomial(vec![
+    ///     Monomial { c: 1.0, e: 2.0 },
+    ///     Monomial { c: 2.0, e: 1.0 },
+    /// ]);
+    /// assert!(my_polynomial1.is_equal_within_tolerance_to(my_polynomial2));
+    /// ```
+    ///
+    /// The above code will return `true` because the two polynomials are equal within a tolerance of `1e-10`.
     pub fn is_equal_within_tolerance_to(&self, other: Polynomial) -> bool {
         let tolerance = 1e-10;
         let simplified_self = self.simplified();
@@ -294,12 +438,21 @@ impl Polynomial {
         }
         true
     }
-
-    // CONTINUE HERE...and add a slash to the end of the line above.
 }
 
 impl Default for Polynomial {
     /// Defaults to an empty polynomial.
+    /// 
+    /// This is equivalent to the polynomial `0`.
+    ///
+    /// #### Example
+    /// ```rust
+    /// use calcucalc::Polynomial;
+    /// 
+    /// let p = Polynomial::default();
+    /// assert_eq!(p, Polynomial(vec![]));
+    /// assert_eq!(p.0.len(), 0);
+    /// ```
     fn default() -> Self {
         Self::new()
     }
