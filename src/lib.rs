@@ -442,13 +442,13 @@ impl Polynomial {
 
 impl Default for Polynomial {
     /// Defaults to an empty polynomial.
-    /// 
+    ///
     /// This is equivalent to the polynomial `0`.
     ///
     /// #### Example
     /// ```rust
     /// use calcucalc::Polynomial;
-    /// 
+    ///
     /// let p = Polynomial::default();
     /// assert_eq!(p, Polynomial(vec![]));
     /// assert_eq!(p.0.len(), 0);
