@@ -112,13 +112,33 @@ impl Monomial {
     ///
     /// let m = Monomial { c: 1.0, e: 3.141592653589793 };
     /// let m_derivative = Monomial { c: 3.141592653589793, e: 2.141592653589793 };
-    /// assert_eq!(m_derivative, m.monomial_derivative());
+    /// assert_eq!(m_derivative, m.derivative());
     /// ```
-    pub fn monomial_derivative(&self) -> Monomial {
+    pub fn derivative(&self) -> Monomial {
         Monomial {
             c: self.c * self.e,
             e: self.e - 1_f64,
         }
+    }
+
+    /// Calculates the nth derivative of the monomial.
+    /// 
+    /// The nth derivative of a monomial is the result of taking the derivative of the monomial `n` times.
+    /// 
+    /// #### Example
+    /// ```rust
+    /// use calcucalc::Monomial;
+    ///
+    /// let m = Monomial { c: 1.0, e: 3.141592653589793 };
+    /// let m_nth_derivative = m.nth_derivative(2);
+    /// assert_eq!(m_nth_derivative, Monomial { c: 6.728011747499565, e: 1.1415926535897931 });
+    /// ```
+    pub fn nth_derivative(&self, n: u32) -> Monomial {
+        let mut new_monomial = self.clone();
+        for _ in 0..n {
+            new_monomial = new_monomial.derivative();
+        }
+        new_monomial
     }
 }
 
@@ -397,7 +417,7 @@ impl Polynomial {
     pub fn derivative(&self) -> Polynomial {
         let mut elements = vec![];
         for element in &self.0 {
-            elements.push(element.monomial_derivative());
+            elements.push(element.derivative());
         }
         Polynomial(elements).simplified()
     }
@@ -1192,5 +1212,7 @@ mod tests {
                 Monomial { c: -36.0, e: 0.0 }
             ])
         );
+
+        // ADD MORE TESTS HERE...
     }
 }
