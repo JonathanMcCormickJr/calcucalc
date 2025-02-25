@@ -122,9 +122,9 @@ impl Monomial {
     }
 
     /// Calculates the nth derivative of the monomial.
-    /// 
+    ///
     /// The nth derivative of a monomial is the result of taking the derivative of the monomial `n` times.
-    /// 
+    ///
     /// #### Example
     /// ```rust
     /// use calcucalc::Monomial;
