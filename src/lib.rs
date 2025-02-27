@@ -1,22 +1,27 @@
-#![doc = include_str!("../README.md")]
 #![forbid(unsafe_code)]
 
+//! # 🔢 calcucalc 📈
+//!
+//! A Rust library for doing general-purpose **calculus**.
+//!
 //! ## 🌱 Getting Started
-
+//!
 //! The goal of this project is to provide a simple and easy-to-use library for doing calculus operations.
 //!
 //! ### 🦀 Prerequisites
 //!
-//! You will need to have Rust installed on your machine. You can install Rust by following the instructions [here](https://www.rust-lang.org/tools/install).
+//! You will need to have Rust installed on your machine. You can install Rust by following the instructions on the [official Rust lang site](https://www.rust-lang.org/tools/install).
 //!
 //! ### 🖥️ Installing
 //!
-//! To install the library, add the following to your `Cargo.toml` file:
+//! To install this library, add the following to your `Cargo.toml` file:
 //!
 //! ```toml
 //! [dependencies]
 //! calcucalc = "VERSION_GOES_HERE"
 //! ```
+//!
+//! It is recommended to use the latest version. You can find the latest version on [this library's crates.io page](https://crates.io/crates/calcucalc).
 //!
 //! ## 🛠️ Usage
 //!
@@ -46,7 +51,9 @@
 ///
 #[derive(Clone, Debug, PartialEq)]
 pub struct Monomial {
+    /// <u>c</u>oefficient
     pub c: f64, // Coefficient
+    /// <u>e</u>xponent
     pub e: f64, // Exponent
 }
 
@@ -1084,7 +1091,6 @@ mod tests {
         assert_eq!(p9, p7.add_polynomial(p8));
     }
 
-    // CONTINUE HERE... TEST MULTIPLICATION OF POLYNOMIALS.
     #[test]
     fn test_multiply_polynomial() {
         let p1 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
@@ -1213,37 +1219,63 @@ mod tests {
             ])
         );
 
-        let p2 = Polynomial(vec!(
-            Monomial { c: 540.354, e: 64.3 },
+        let p2 = Polynomial(vec![
+            Monomial {
+                c: 540.354,
+                e: 64.3,
+            },
             Monomial { c: 0.9, e: 64.0 },
             Monomial { c: 0.0, e: 63.0 },
             Monomial { c: 0.0, e: 5.0 },
-        ));
-        assert_eq!(p2.nth_derivative(15), 
+        ]);
+        assert_eq!(
+            p2.nth_derivative(15),
             Polynomial(vec![
-                Monomial { c: 1.2200689110119749e29, e: 49.3 },
-                Monomial { c: 1.8773901659652704e26, e: 49.0 },
+                Monomial {
+                    c: 1.2200689110119749e29,
+                    e: 49.3
+                },
+                Monomial {
+                    c: 1.8773901659652704e26,
+                    e: 49.0
+                },
             ])
         );
-        assert_eq!(p2.nth_derivative(64), 
+        assert_eq!(
+            p2.nth_derivative(64),
             Polynomial(vec![
-                Monomial { c: 2.66837419180906e92, e: 0.29999999999999716 },
-                Monomial { c: 1.1419823896729576e89, e: 0.0 }
+                Monomial {
+                    c: 2.66837419180906e92,
+                    e: 0.29999999999999716
+                },
+                Monomial {
+                    c: 1.1419823896729576e89,
+                    e: 0.0
+                }
             ])
         );
 
-        let p3 = Polynomial(vec!(
-            Monomial { c: -540.354, e: -64.3 },
+        let p3 = Polynomial(vec![
+            Monomial {
+                c: -540.354,
+                e: -64.3,
+            },
             Monomial { c: 0.9, e: -64.0 },
             Monomial { c: 0.0, e: 63.0 },
             Monomial { c: 0.0, e: 5.0 },
-        ));
-        assert_eq!(p3.nth_derivative(15), 
+        ]);
+        assert_eq!(
+            p3.nth_derivative(15),
             Polynomial(vec![
-                Monomial { c: -5.140628626036299e27, e: -79.0 },
-                Monomial { c: 3.288681130950845e30, e: -79.3 },
+                Monomial {
+                    c: -5.140628626036299e27,
+                    e: -79.0
+                },
+                Monomial {
+                    c: 3.288681130950845e30,
+                    e: -79.3
+                },
             ])
         );
-
     }
 }
