@@ -1213,6 +1213,37 @@ mod tests {
             ])
         );
 
-        // ADD MORE TESTS HERE...
+        let p2 = Polynomial(vec!(
+            Monomial { c: 540.354, e: 64.3 },
+            Monomial { c: 0.9, e: 64.0 },
+            Monomial { c: 0.0, e: 63.0 },
+            Monomial { c: 0.0, e: 5.0 },
+        ));
+        assert_eq!(p2.nth_derivative(15), 
+            Polynomial(vec![
+                Monomial { c: 1.2200689110119749e29, e: 49.3 },
+                Monomial { c: 1.8773901659652704e26, e: 49.0 },
+            ])
+        );
+        assert_eq!(p2.nth_derivative(64), 
+            Polynomial(vec![
+                Monomial { c: 2.66837419180906e92, e: 0.29999999999999716 },
+                Monomial { c: 1.1419823896729576e89, e: 0.0 }
+            ])
+        );
+
+        let p3 = Polynomial(vec!(
+            Monomial { c: -540.354, e: -64.3 },
+            Monomial { c: 0.9, e: -64.0 },
+            Monomial { c: 0.0, e: 63.0 },
+            Monomial { c: 0.0, e: 5.0 },
+        ));
+        assert_eq!(p3.nth_derivative(15), 
+            Polynomial(vec![
+                Monomial { c: -5.140628626036299e27, e: -79.0 },
+                Monomial { c: 3.288681130950845e30, e: -79.3 },
+            ])
+        );
+
     }
 }
