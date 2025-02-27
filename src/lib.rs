@@ -71,6 +71,22 @@ impl Monomial {
         Monomial { c, e }
     }
 
+    /// Calculates the value of the monomial for a given value of x.
+    /// 
+    /// #### Example
+    /// ```rust
+    /// use calcucalc::Monomial;
+    /// 
+    /// let m = Monomial { c: 2.0, e: 3.0 };
+    /// assert_eq!(m.value(2.0), 16.0);
+    /// assert_eq!(m.value(3.0), 54.0);
+    /// assert_eq!(m.value(4.0), 128.0);
+    /// assert_eq!(m.value(5.0), 250.0);
+    /// ```
+    pub fn value(&self, x: f64) -> f64 {
+        self.c * (x.powf(self.e))
+    }
+
     /// Adds one monomial to another, if they have the same exponent of x.
     ///
     /// #### Example
@@ -549,6 +565,37 @@ mod tests {
             Monomial { c: 1_f64, e: 1_f64 },
             Monomial { c: 1_f64, e: 0_f64 }
         );
+    }
+
+    #[test]
+    fn test_value_monomial() {
+        let m1 = Monomial { c: 1_f64, e: 1_f64 };
+        assert_eq!(m1.value(2_f64), 2_f64);
+        assert_eq!(m1.value(3_f64), 3_f64);
+        assert_eq!(m1.value(4_f64), 4_f64);
+        assert_eq!(m1.value(5_f64), 5_f64);
+
+        let m2 = Monomial { c: 2_f64, e: 2_f64 };
+        assert_eq!(m2.value(2_f64), 8_f64);
+        assert_eq!(m2.value(3_f64), 18_f64);
+        assert_eq!(m2.value(4_f64), 32_f64);
+        assert_eq!(m2.value(5_f64), 50_f64);
+
+        let m3 = Monomial { c: 0.5, e: -1.0 };
+        assert_eq!(m3.value(2.0), 0.25);
+        assert_eq!(m3.value(3.0), 0.16666666666666666);
+        assert_eq!(m3.value(4.0), 0.125);
+        assert_eq!(m3.value(5.0), 0.1);
+        assert_eq!(m3.value(0.5), 1.0);
+        assert_eq!(m3.value(0.25), 2.0);
+        assert_eq!(m3.value(0.125), 4.0);
+        assert_eq!(m3.value(0.0625), 8.0);
+        assert_eq!(m3.value(0.03125), 16.0);
+        assert_eq!(m3.value(0.015625), 32.0);
+        assert_eq!(m3.value(-1.0), -0.5);
+        assert_eq!(m3.value(-2.0), -0.25);
+        assert_eq!(m3.value(-3.0), -0.16666666666666666);
+        assert_eq!(m3.value(-4.0), -0.125);
     }
 
     #[test]
