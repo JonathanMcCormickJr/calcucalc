@@ -6,8 +6,11 @@ This is very much a work in progress at this stage. Feel free to contribute any 
 
 ## 🌠 Features
 - [x] Data structures for representing monomials & polynomials
+    - [ ] Calculate value for a given x value
     - [x] Derivatives of monomials & polynomials
     - [x] nth-power derivatives of monomials & polynomials
+    - [ ] determine whether a certain interval grows, shrinks, stays constant or none of the above over a given interval
+    - [ ] Determine whether a given interval is "concave up" or "concave down"
 - [ ] Suggest more features here. 
 
 ## 📄 Documentation
