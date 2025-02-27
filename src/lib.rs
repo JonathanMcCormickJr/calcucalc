@@ -72,11 +72,11 @@ impl Monomial {
     }
 
     /// Calculates the value of the monomial for a given value of x.
-    /// 
+    ///
     /// #### Example
     /// ```rust
     /// use calcucalc::Monomial;
-    /// 
+    ///
     /// let m = Monomial { c: 2.0, e: 3.0 };
     /// assert_eq!(m.value(2.0), 16.0);
     /// assert_eq!(m.value(3.0), 54.0);
@@ -210,6 +210,32 @@ impl Polynomial {
     /// ```
     pub fn new() -> Polynomial {
         Polynomial(vec![])
+    }
+
+    /// Calculates the value of a polynomial for a given value of x.
+    ///
+    /// #### Example
+    /// ```rust
+    /// use calcucalc::{Monomial, Polynomial};
+    ///
+    /// let my_polynomial = Polynomial(vec![
+    ///    Monomial { c: 1.0, e: 2.0 },
+    ///    Monomial { c: 3.0, e: 1.0 },
+    ///    Monomial { c: 2.0, e: 0.0 },
+    /// ]);
+    /// assert_eq!(my_polynomial.value(-1.0), 0.0);
+    /// assert_eq!(my_polynomial.value(0.0), 2.0);
+    /// assert_eq!(my_polynomial.value(1.0), 6.0);
+    /// assert_eq!(my_polynomial.value(2.0), 12.0);
+    /// assert_eq!(my_polynomial.value(3.0), 20.0);
+    ///
+    pub fn value(&self, x: f64) -> f64 {
+        let elements = &self.0;
+        let mut value = 0_f64;
+        for element in elements {
+            value += element.value(x);
+        }
+        value
     }
 
     /// Simplifies the polynomial by combining elements which have the same exponent of x, and then sorting the elements by the exponent of x (in descending order).
@@ -774,6 +800,16 @@ mod tests {
 
         assert_eq!(24, std::mem::size_of_val(&p1));
         assert_eq!(24, std::mem::size_of_val(&p2));
+    }
+
+    #[test]
+    fn test_value_polynomial() {
+        let p1 = Polynomial(vec![
+            Monomial { c: 1_f64, e: 2_f64 },
+            Monomial { c: 2_f64, e: 1_f64 },
+        ]);
+        assert_eq!(p1.value(2.0), 8.0);
+        assert_eq!(p1.value(3.0), 15.0);
     }
 
     #[test]

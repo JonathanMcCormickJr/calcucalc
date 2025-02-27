@@ -1,6 +1,6 @@
 [package]
 name = "calcucalc"
-version = "0.1.11"
+version = "0.1.12"
 edition = "2024"
 authors = ["Jonathan A. McCormick Jr."]
 license = "MIT"
