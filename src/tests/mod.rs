@@ -1,2 +1,2 @@
-pub mod test_monomial;
-pub mod test_polynomial;
+mod test_monomial;
+mod test_polynomial;

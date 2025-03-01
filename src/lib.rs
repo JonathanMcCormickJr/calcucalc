@@ -572,4 +572,4 @@ impl Default for Polynomial {
     }
 }
 
-pub mod tests;
+mod tests;
