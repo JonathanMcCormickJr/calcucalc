@@ -27,6 +27,7 @@
 //!
 //! This documentation provides examples of how to use the library. Just navigate to the item you want to learn more about, and the description and examples will be there.
 //!
+//! Overall, this library relies heavily on the use of the `f64` type for the sake of flexibility and generality. 
 //!
 
 /// A monomial is a product of a coefficient and an exponent of x.
