@@ -17,7 +17,7 @@ This is very much a work in progress at this stage. Feel free to contribute any 
 
 The documentation for this project can be found [here](https://docs.rs/calcucalc/latest/calcucalc/index.html).
 
-## ⛓️‍💥 License
+## ⚖️ License
 
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/JonathanMcCormickJr/calcucalc/blob/master/LICENSE) file for details.
 
