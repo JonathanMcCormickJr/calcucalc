@@ -572,4 +572,5 @@ impl Default for Polynomial {
     }
 }
 
+#[cfg(test)]
 mod tests;
