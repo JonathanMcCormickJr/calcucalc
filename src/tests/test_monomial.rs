@@ -2,29 +2,25 @@ use std::f64::consts::{PI, E};
 
 use crate::Monomial;
 
-static MONOMIAL_1_2: Monomial = Monomial { c: 1_f64, e: 2_f64 };
-static MONOMIAL_2_2: Monomial = Monomial { c: 2_f64, e: 2_f64 };
-static MONOMIAL_3_3: Monomial = Monomial { c: 3_f64, e: 3_f64 };
-static MONOMIAL_1_1: Monomial = Monomial { c: 1_f64, e: 1_f64 };
-static MONOMIAL_2_1: Monomial = Monomial { c: 2_f64, e: 1_f64 };
-static MONOMIAL_3_1: Monomial = Monomial { c: 3_f64, e: 1_f64 };
-
-static MONOMIAL_PI_0: Monomial = Monomial { c: PI, e: 0_f64 };
-static MONOMIAL_E_0: Monomial = Monomial { c: E, e: 0_f64 };
-
-static MONOMIAL_N4_0: Monomial = Monomial { c: -4_f64, e: 0_f64 };
-
-static MONOMIAL_1_0: Monomial = Monomial { c: 1_f64, e: 0_f64 };
-
-static MONOMIAL_241346513P3452231_N3954398000P8481: Monomial = Monomial { c: 241346513.3452231_f64, e: -3954398000.8481_f64 };
-static MONOMIAL_N34P2_389651P6516: Monomial = Monomial { c: -34.2_f64, e: 389651.6516_f64 };
 static MONOMIAL_0P5_N1: Monomial = Monomial { c: 0.5, e: -1.0 };
+static MONOMIAL_102_250: Monomial = Monomial { c: 102_f64, e: 250_f64 };
+static MONOMIAL_1_0: Monomial = Monomial { c: 1_f64, e: 0_f64 };
+static MONOMIAL_1_1: Monomial = Monomial { c: 1_f64, e: 1_f64 };
+static MONOMIAL_1_2: Monomial = Monomial { c: 1_f64, e: 2_f64 };
+static MONOMIAL_1_N11: Monomial = Monomial { c: 1_f64, e: -11_f64 };
+static MONOMIAL_2_1: Monomial = Monomial { c: 2_f64, e: 1_f64 };
+static MONOMIAL_2_2: Monomial = Monomial { c: 2_f64, e: 2_f64 };
+static MONOMIAL_241346513P3452231_N3954398000P8481: Monomial = Monomial { c: 241346513.3452231_f64, e: -3954398000.8481_f64 };
+static MONOMIAL_2_N11: Monomial = Monomial { c: 2_f64, e: -11_f64 };
+static MONOMIAL_3_1: Monomial = Monomial { c: 3_f64, e: 1_f64 };
+static MONOMIAL_3_3: Monomial = Monomial { c: 3_f64, e: 3_f64 };
+static MONOMIAL_3_N11: Monomial = Monomial { c: 3_f64, e: -11_f64 };
 static MONOMIAL_45_250: Monomial =  Monomial { c: 45_f64, e: 250_f64 };
 static MONOMIAL_57_250: Monomial = Monomial { c: 57_f64, e: 250_f64 };
-static MONOMIAL_102_250: Monomial = Monomial { c: 102_f64, e: 250_f64 };
-static MONOMIAL_1_N11: Monomial = Monomial { c: 1_f64, e: -11_f64 };
-static MONOMIAL_2_N11: Monomial = Monomial { c: 2_f64, e: -11_f64 };
-static MONOMIAL_3_N11: Monomial = Monomial { c: 3_f64, e: -11_f64 };
+static MONOMIAL_E_0: Monomial = Monomial { c: E, e: 0_f64 };
+static MONOMIAL_N34P2_389651P6516: Monomial = Monomial { c: -34.2_f64, e: 389651.6516_f64 };
+static MONOMIAL_N4_0: Monomial = Monomial { c: -4_f64, e: 0_f64 };
+static MONOMIAL_PI_0: Monomial = Monomial { c: PI, e: 0_f64 };
 
 #[test]
 fn test_monomial_identity() {
