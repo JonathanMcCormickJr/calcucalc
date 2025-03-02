@@ -17,6 +17,17 @@ fn test_monomial_identity() {
 }
 
 #[test]
+fn test_monomial_fields_access() {
+    let m0 = Monomial { c: 1_f64, e: 1_f64 };
+    assert_eq!(m0.c, 1_f64);
+    assert_eq!(m0.e, 1_f64);
+    
+    let m1 = Monomial { c: -34.2_f64, e: 389651.6516_f64 };
+    assert_eq!(m1.c, -34.2_f64);
+    assert_eq!(m1.e, 389651.6516_f64);
+}
+
+#[test]
 fn test_value_monomial() {
     let m1 = Monomial { c: 1_f64, e: 1_f64 };
     assert_eq!(m1.value(2_f64), 2_f64);
