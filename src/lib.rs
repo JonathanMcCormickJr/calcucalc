@@ -570,7 +570,7 @@ impl Polynomial {
     /// assert_eq!(my_polynomial.trend_over_interval(-1.0, 0.0), "decreasing");
     /// assert_eq!(my_polynomial.trend_over_interval(0.0, 2.0), "constant");
     /// ```
-    /// 
+    ///
     /// While it is recommended to order the start and end x-values in ascending order, this function will automatically swap them if they are not.
     pub fn trend_over_interval(&self, start: f64, end: f64) -> String {
         // Validate the start and end x-values are in the correct order,

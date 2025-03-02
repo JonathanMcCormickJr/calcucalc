@@ -639,8 +639,14 @@ fn test_trend_over_interval() {
     assert_eq!(p2.trend_over_interval(1.0, 6.0), "decreasing");
 
     let p3 = Polynomial(vec![
-        Monomial { c: 6581.0, e: 162.0 },
-        Monomial { c: -2166.0019, e: 1.000014 },
+        Monomial {
+            c: 6581.0,
+            e: 162.0,
+        },
+        Monomial {
+            c: -2166.0019,
+            e: 1.000014,
+        },
         Monomial { c: 1.0, e: 0.0 },
     ]);
     assert_eq!(p3.trend_over_interval(0.0, 1.0), "increasing");
