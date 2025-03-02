@@ -1,31 +1,31 @@
-// TO START, INHERIT THE TEST CASES FOR MONOMIAL FROM MODULE ROOT
-
+use crate::tests::monomial_statics::*;
 use crate::{Monomial, Polynomial};
 
 #[test]
 fn test_polynomial_identity() {
-    let p1 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
-    let p2 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
-    assert_eq!(p1, p2);
+    let p_1_1 = Polynomial(vec![MONOMIAL_1_1.clone()]);
 
-    let p3 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
-    let p4 = Polynomial(vec![Monomial { c: 1_f64, e: 0_f64 }]);
-    assert_ne!(p3, p4);
+    let p2 = &p_1_1;
+    assert_eq!(p_1_1, *p2);
 
-    let p5 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
+    let p3 = &p_1_1;
+    let p4 = Polynomial(vec![MONOMIAL_1_0.clone()]);
+    assert_ne!(*p3, p4);
+
+    let p5 = &p_1_1;
     let p6 = Polynomial(vec![Monomial { c: 0_f64, e: 1_f64 }]);
-    assert_ne!(p5, p6);
+    assert_ne!(*p5, p6);
 
-    let p7 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
+    let p7 = &p_1_1;
     let p8 = Polynomial(vec![Monomial { c: 0_f64, e: 0_f64 }]);
-    assert_ne!(p7, p8);
+    assert_ne!(*p7, p8);
 
-    let p9 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
+    let p9 = &p_1_1;
     let p10 = Polynomial(vec![
-        Monomial { c: 1_f64, e: 1_f64 },
-        Monomial { c: 1_f64, e: 1_f64 },
+        MONOMIAL_1_1.clone(),
+        MONOMIAL_1_1.clone(),
     ]);
-    assert_ne!(p9, p10);
+    assert_ne!(*p9, p10);
 }
 
 #[test]
@@ -33,10 +33,10 @@ fn test_new_polynomial() {
     let p1 = Polynomial::new();
     let p2 = Polynomial(vec![]);
     assert_eq!(p1, p2);
+    assert_eq!(p1.0, p2.0);
 
     assert_eq!(p1.0.len(), 0);
     assert_eq!(p2.0.len(), 0);
-    assert_eq!(p1.0, p2.0);
 
     assert_eq!(24, std::mem::size_of_val(&p1));
     assert_eq!(24, std::mem::size_of_val(&p2));
@@ -501,7 +501,6 @@ fn test_derivative() {
 
 #[test]
 fn test_is_equal_within_tolerance_to() {
-    // CODE GOES HERE...
     let p1 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
     let p2 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
     assert!(p1.is_equal_within_tolerance_to(p2));
@@ -660,3 +659,18 @@ fn test_trend_over_interval() {
     assert_eq!(p3.trend_over_interval(-1.0, 1.0), "undefined");
     assert_eq!(p3.trend_over_interval(1.0, 1.0), "constant");
 }
+
+#[test]
+fn test_interval_concave_up_down_both_or_neither() {
+    let p1 = Polynomial(vec![
+        Monomial { c: 11.0, e: 3.0 },
+        Monomial { c: 1.0, e: 2.0 },
+        Monomial { c: -2.0, e: 1.0 },
+        Monomial { c: 1.0, e: 0.0 },
+    ]);
+    assert_eq!(p1.concavity_over_interval(0.0, 1.0), "concave up");
+    assert_eq!(p1.concavity_over_interval(1.0, 2.0), "concave up");
+    assert_eq!(p1.concavity_over_interval(-2.0, -0.25), "concave down");
+    assert_eq!(p1.concavity_over_interval(-1.0, 0.5), "undefined");
+}
+

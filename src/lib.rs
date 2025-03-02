@@ -239,7 +239,8 @@ impl Polynomial {
     /// use calcucalc::Polynomial;
     ///
     /// let my_polynomial = Polynomial::new();
-    /// assert_eq!(my_polynomial.0.len(), 0)
+    /// assert_eq!(my_polynomial.0.len(), 0);
+    /// assert_eq!(my_polynomial, Polynomial(vec![]));
     /// ```
     pub fn new() -> Polynomial {
         Polynomial(vec![])
@@ -621,6 +622,48 @@ impl Polynomial {
             "decreasing".to_string()
         } else if start_value == end_value {
             "constant".to_string()
+        } else {
+            "undefined".to_string()
+        }
+    }
+
+    /// Checks whether a given interval of a polynomial is "concave up", "concave down", or "undefined".
+    /// The interval is defined by the start and end values. This function does not take into account anything in between. In other words, it only tells you whether or not the **overall** concavity of the polynomial is up or down over the interval. It says nothing about the concavity at any specific point within the interval.
+    ///
+    /// #### Example
+    /// ```rust
+    /// use calcucalc::{Monomial, Polynomial};
+    ///
+    /// let my_polynomial = Polynomial(vec![
+    ///     Monomial { c: 1.0, e: 3.0 },
+    ///     Monomial { c: 1.0, e: 2.0 },
+    ///     Monomial { c: -2.0, e: 1.0 },
+    ///     Monomial { c: 1.0, e: 0.0 },
+    /// ]);
+    /// assert_eq!(my_polynomial.concavity_over_interval(-2.0, -1.0), "concave down");
+    /// assert_eq!(my_polynomial.concavity_over_interval(-1.0, 0.0), "undefined");
+    /// assert_eq!(my_polynomial.concavity_over_interval(0.0, 1.0), "concave up");
+    ///
+    pub fn concavity_over_interval(&self, start: f64, end: f64) -> String {
+        // Validate the start and end x-values are in the correct order,
+        // and swap them if they are not.
+        let mut start_x = start;
+        let mut end_x = end;
+        if start_x > end_x {
+            std::mem::swap(&mut start_x, &mut end_x);
+        }
+
+        // Calculate the second derivative of the polynomial
+        let second_derivative = self.nth_derivative(2);
+
+        // Calculate the second derivative at the start and end x-values
+        let start_value = second_derivative.value(start_x);
+        let end_value = second_derivative.value(end_x);
+
+        if start_value > 0.0 && end_value > 0.0 {
+            "concave up".to_string()
+        } else if start_value < 0.0 && end_value < 0.0 {
+            "concave down".to_string()
         } else {
             "undefined".to_string()
         }

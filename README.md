@@ -10,7 +10,7 @@ This is very much a work in progress at this stage. Feel free to contribute any 
     - [x] Derivatives of monomials & polynomials
     - [x] nth-power derivatives of monomials & polynomials
     - [x] determine whether a certain interval grows, shrinks, stays constant or none of the above over a given interval
-    - [ ] Determine whether a given interval is "concave up", "concave down", contains both, or neither.
+    - [x] Determine whether a given interval is overall "concave up", "concave down", or "undefined".
 - [ ] Suggest more features here. 
 
 ## 📄 Documentation
