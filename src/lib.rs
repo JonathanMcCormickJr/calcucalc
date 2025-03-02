@@ -552,6 +552,47 @@ impl Polynomial {
         }
         true
     }
+
+    /// Checks whether the values of a given interval of a polynomial overall is increasing, decreasing, staying constant, or is undefined.
+    /// The interval is defined by the start and end values.
+    ///
+    /// #### Example
+    /// ```rust
+    /// use calcucalc::{Monomial, Polynomial};
+    ///
+    /// let my_polynomial = Polynomial(vec![
+    ///     Monomial { c: 1.0, e: 2.0 },
+    ///     Monomial { c: -2.0, e: 1.0 },
+    ///     Monomial { c: 1.0, e: 0.0 },
+    /// ]);
+    /// assert_eq!(my_polynomial.trend_over_interval(-1.0, 1.0), "decreasing");
+    /// assert_eq!(my_polynomial.trend_over_interval(1.0, 2.0), "increasing");
+    /// assert_eq!(my_polynomial.trend_over_interval(-1.0, 0.0), "decreasing");
+    /// assert_eq!(my_polynomial.trend_over_interval(0.0, 2.0), "constant");
+    /// ```
+    /// 
+    /// While it is recommended to order the start and end x-values in ascending order, this function will automatically swap them if they are not.
+    pub fn trend_over_interval(&self, start: f64, end: f64) -> String {
+        // Validate the start and end x-values are in the correct order,
+        // and swap them if they are not.
+        let mut start_x = start;
+        let mut end_x = end;
+        if start_x > end_x {
+            std::mem::swap(&mut start_x, &mut end_x);
+        }
+
+        let start_value = self.value(start_x);
+        let end_value = self.value(end_x);
+        if start_value < end_value {
+            "increasing".to_string()
+        } else if start_value > end_value {
+            "decreasing".to_string()
+        } else if start_value == end_value {
+            "constant".to_string()
+        } else {
+            "undefined".to_string()
+        }
+    }
 }
 
 impl Default for Polynomial {

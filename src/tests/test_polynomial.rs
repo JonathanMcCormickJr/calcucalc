@@ -611,3 +611,44 @@ fn test_nth_derivative() {
         ])
     );
 }
+
+#[test]
+fn test_trend_over_interval() {
+    let p1 = Polynomial(vec![
+        Monomial { c: 1.0, e: 2.0 },
+        Monomial { c: -2.0, e: 1.0 },
+        Monomial { c: 1.0, e: 0.0 },
+    ]);
+
+    assert_eq!(p1.trend_over_interval(0.0, -1.0), "decreasing");
+    assert_eq!(p1.trend_over_interval(-1.0, 0.0), "decreasing");
+
+    assert_eq!(p1.trend_over_interval(2.0, 6.0), "increasing");
+    assert_eq!(p1.trend_over_interval(6.0, 2.0), "increasing");
+
+    let p2 = Polynomial(vec![
+        Monomial { c: -5.0, e: 3.0 },
+        Monomial { c: 5.0, e: 2.2 },
+        Monomial { c: -2.0, e: -1.0 },
+        Monomial { c: 1.0, e: 0.0 },
+    ]);
+    assert_eq!(p2.trend_over_interval(0.0, 1.0), "increasing");
+    assert_eq!(p2.trend_over_interval(1.0, 0.0), "increasing");
+
+    assert_eq!(p2.trend_over_interval(1.0, 6.0), "decreasing");
+    assert_eq!(p2.trend_over_interval(1.0, 6.0), "decreasing");
+
+    let p3 = Polynomial(vec![
+        Monomial { c: 6581.0, e: 162.0 },
+        Monomial { c: -2166.0019, e: 1.000014 },
+        Monomial { c: 1.0, e: 0.0 },
+    ]);
+    assert_eq!(p3.trend_over_interval(0.0, 1.0), "increasing");
+    assert_eq!(p3.trend_over_interval(1.0, 0.0), "increasing");
+
+    assert_eq!(p3.trend_over_interval(1.0, 6.0), "increasing");
+    assert_eq!(p3.trend_over_interval(6.0, 1.0), "increasing");
+
+    assert_eq!(p3.trend_over_interval(-1.0, 1.0), "undefined");
+    assert_eq!(p3.trend_over_interval(1.0, 1.0), "constant");
+}
