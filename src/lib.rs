@@ -38,21 +38,21 @@
 ///
 /// let three_x_squared = Monomial { c: 3.0, e: 2.0 }; // 3x^2
 /// ```
-/// 
+///
 /// One of the beautiful things about the monomial is its flexibility. For example, we can represent a **fraction** like `5/x` as a monomial. This is because `5/x` is equivalent to `5 * x^-1`. In this case, the coefficient is `5` and the exponent of x is `-1`.
-/// 
+///
 /// ```rust
 /// use calcucalc::Monomial;
-/// 
+///
 /// let five_divided_by_x = Monomial { c: 5.0, e: -1.0 }; // 5/x
 /// ```
-/// 
+///
 /// We can also represent a **constant** as a monomial. For example, the number `1` can be represented as `1 * x^0`. In this case, the coefficient is `1` and the exponent of x is `0`.
-/// 
+///
 /// ```rust
 /// use calcucalc::Monomial;
-/// 
-/// let one = Monomial { c: 1.0, e: 0.0 }; // 1 
+///
+/// let one = Monomial { c: 1.0, e: 0.0 }; // 1
 /// ```
 /// This library is intended to be as general-purpose as possible, which is why the coefficient and exponent are represented as floating-point numbers (as opposed to integers). This allows for more flexibility in the types of functions that can be represented.
 ///
@@ -67,21 +67,21 @@
 /// | `3x^-2` aka `3/(x^2)` | `Monomial { c: 3.0, e: -2.0 }` |
 /// | `2x^0.5` aka `2 * √x` | `Monomial { c: 2.0, e: 0.5 }` |
 /// | `1.5x^0.25` aka `1.5 * ∜x` | `Monomial { c: 1.5, e: 0.25 }` |
-/// | `2x^π` | `Monomial { c: 2.0, e: 3.141592653589793 }` |
-/// | `3x^e` | `Monomial { c: 3.0, e: 2.718281828459045 }` |
+/// | `2x^π` | `Monomial { c: 2.0, e: std::f64::consts::PI }` |
+/// | `3x^e` | `Monomial { c: 3.0, e: std::f64::consts::E }` |
 ///
 /// #### Accessing monomial fields
-/// 
+///
 /// The coefficient and exponent of a monomial can be accessed using the `c` and `e` fields, respectively.
-/// 
+///
 /// ```rust
 /// use calcucalc::Monomial;
-/// 
+///
 /// let m = Monomial { c: 1.0, e: 2.0 };
 /// assert_eq!(m.c, 1.0);
 /// assert_eq!(m.e, 2.0);
 /// ```
-/// 
+///
 #[derive(Clone, Debug, PartialEq)]
 pub struct Monomial {
     /// <u>c</u>oefficient

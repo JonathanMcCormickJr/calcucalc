@@ -1,3 +1,5 @@
+// TO START, INHERIT THE TEST CASES FOR MONOMIAL FROM MODULE ROOT
+
 use crate::{Monomial, Polynomial};
 
 #[test]
