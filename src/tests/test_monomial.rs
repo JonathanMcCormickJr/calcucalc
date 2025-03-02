@@ -1,34 +1,91 @@
+use std::f64::consts::{PI, E};
+
 use crate::Monomial;
+
+static BASIC_MONOMIAL_0: Monomial = Monomial { c: 1_f64, e: 2_f64 };
+static BASIC_MONOMIAL_1: Monomial = Monomial { c: 2_f64, e: 2_f64 };
+static BASIC_MONOMIAL_2: Monomial = Monomial { c: 3_f64, e: 3_f64 };
+static BASIC_MONOMIAL_3: Monomial = Monomial { c: 4_f64, e: 2_f64 };
+static BASIC_MONOMIAL_4: Monomial = Monomial { c: 1_f64, e: 1_f64 };
+
+static PI_MONOMIAL: Monomial = Monomial { c: PI, e: 0_f64 };
+static E_MONOMIAL: Monomial = Monomial { c: E, e: 0_f64 };
+
+static CONSTANT_MONOMIAL_NEGATIVE_4: Monomial = Monomial { c: -4_f64, e: 0_f64 };
+static CONSTANT_MONOMIAL_NEGATIVE_3: Monomial = Monomial { c: -3_f64, e: 0_f64 };
+static CONSTANT_MONOMIAL_NEGATIVE_2: Monomial = Monomial { c: -2_f64, e: 0_f64 };
+static CONSTANT_MONOMIAL_NEGATIVE_1: Monomial = Monomial { c: -1_f64, e: 0_f64 };
+
+static CONSTANT_MONOMIAL_0: Monomial = Monomial { c: 0_f64, e: 0_f64 };
+static CONSTANT_MONOMIAL_1: Monomial = Monomial { c: 1_f64, e: 0_f64 };
+static CONSTANT_MONOMIAL_2: Monomial = Monomial { c: 2_f64, e: 0_f64 };
+static CONSTANT_MONOMIAL_3: Monomial = Monomial { c: 3_f64, e: 0_f64 };
+static CONSTANT_MONOMIAL_4: Monomial = Monomial { c: 4_f64, e: 0_f64 };
+
+static COMPLICATED_MONOMIAL_0: Monomial = Monomial { c: 241346513.3452231_f64, e: -3954398000.8481_f64 };
+static COMPLICATED_MONOMIAL_1: Monomial = Monomial { c: 0.5454_f64, e: 0.0 };
+static COMPLICATED_MONOMIAL_2: Monomial = Monomial { c: 0.0, e: -13460.54541_f64 };
+static COMPLICATED_MONOMIAL_3: Monomial = Monomial { c: -0.00004000050903, e: -2.43563046936 };
+static COMPLICATED_MONOMIAL_4: Monomial = Monomial { c: 0.090452329439, e: -9139990.0 };
+static COMPLICATED_MONOMIAL_5: Monomial = Monomial { c: -34.2_f64, e: 389651.6516_f64 };
 
 #[test]
 fn test_monomial_identity() {
     assert_eq!(
-        Monomial { c: 1_f64, e: 1_f64 },
-        Monomial { c: 1_f64, e: 1_f64 }
+        BASIC_MONOMIAL_0,
+        Monomial { c: 1_f64, e: 2_f64 }
     );
     assert_ne!(
-        Monomial { c: 1_f64, e: 1_f64 },
+        BASIC_MONOMIAL_0,
         Monomial { c: 0_f64, e: 1_f64 }
     );
     assert_ne!(
-        Monomial { c: 1_f64, e: 1_f64 },
-        Monomial { c: 1_f64, e: 0_f64 }
+        BASIC_MONOMIAL_1,
+        BASIC_MONOMIAL_2
     );
+    assert_eq!(PI_MONOMIAL, PI_MONOMIAL);
+    assert_ne!(E_MONOMIAL, BASIC_MONOMIAL_0);
 }
 
 #[test]
 fn test_monomial_fields_access() {
-    let m0 = Monomial { c: 1_f64, e: 1_f64 };
+    let m0 = &CONSTANT_MONOMIAL_1;
     assert_eq!(m0.c, 1_f64);
-    assert_eq!(m0.e, 1_f64);
+    assert_eq!(m0.e, 0_f64);
     
-    let m1 = Monomial { c: -34.2_f64, e: 389651.6516_f64 };
+    let m1 = &COMPLICATED_MONOMIAL_5;
     assert_eq!(m1.c, -34.2_f64);
     assert_eq!(m1.e, 389651.6516_f64);
+
+    let m2 = &CONSTANT_MONOMIAL_NEGATIVE_4;
+    assert_eq!(m2.c, -4_f64);
+    assert_eq!(m2.e, 0_f64);
+
+    let m3 = &COMPLICATED_MONOMIAL_0;
+    assert_eq!(m3.c, 241346513.3452231_f64);
+    assert_eq!(m3.e, -3954398000.8481_f64);
+
+    assert_eq!(BASIC_MONOMIAL_0.c, 1_f64);
+    assert_eq!(BASIC_MONOMIAL_0.e, 2_f64);
+    assert_eq!(PI_MONOMIAL.c, 3.14159265358979323846);
+    assert_eq!(PI_MONOMIAL.e, 0_f64);
+    assert_eq!(E_MONOMIAL.c, 2.71828182845904523536);
+    assert_eq!(E_MONOMIAL.e, 0_f64);
 }
 
+
+
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// + CONTINUE HERE WITH REFACTORING TO USE THE STATIC MONOMIALS +
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+
 #[test]
-fn test_value_monomial() {
+fn test_values_for_monomial() {
     let m1 = Monomial { c: 1_f64, e: 1_f64 };
     assert_eq!(m1.value(2_f64), 2_f64);
     assert_eq!(m1.value(3_f64), 3_f64);
@@ -59,7 +116,7 @@ fn test_value_monomial() {
 }
 
 #[test]
-fn test_add_monomial_of_same_power() {
+fn test_add_monomial_of_same_power() {  
     let m1 = Monomial { c: 1_f64, e: 1_f64 };
     let m2 = Monomial { c: 2_f64, e: 1_f64 };
     let m3 = Monomial { c: 3_f64, e: 1_f64 };
