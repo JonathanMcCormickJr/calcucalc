@@ -9,7 +9,7 @@ This is very much a work in progress at this stage. Feel free to contribute any 
     - [x] Calculate value for a given x value for a monomial or polynomial
     - [x] Derivatives of monomials & polynomials
     - [x] nth-power derivatives of monomials & polynomials
-    - [ ] determine whether a certain interval grows, shrinks, stays constant or none of the above over a given interval
+    - [x] determine whether a certain interval grows, shrinks, stays constant or none of the above over a given interval
     - [ ] Determine whether a given interval is "concave up", "concave down", contains both, or neither.
 - [ ] Suggest more features here. 
 
