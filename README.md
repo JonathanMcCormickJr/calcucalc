@@ -21,3 +21,5 @@ The documentation for this project can be found [here](https://docs.rs/calcucalc
 
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/JonathanMcCormickJr/calcucalc/blob/master/LICENSE) file for details.
 
+Of course, if you submit a contribution, you agree to license your contribution under the same license.
+
