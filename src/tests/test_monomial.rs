@@ -154,3 +154,15 @@ fn test_multiply_monomial() {
     let m18 = &MONOMIAL_0_0;
     assert_eq!(*m18, m16.multiply_monomial(m17.clone()));
 }
+
+#[test]
+fn test_trig_on_monomial() {
+    let m1 = Monomial{ c: 1.0, e: 1.0 };
+    assert_eq!(f64::sin(m1.value(1.0)), 0.8414709848078965);
+
+    let m2 = Monomial{ c: 1.0, e: 2.0 };
+    assert_eq!(f64::cos(m2.value(1.0)), 0.5403023058681398);
+
+    let m3 = Monomial{ c: 1.0, e: 3.0 };
+    assert_eq!(f64::tan(m3.value(1.5)), 0.23774039376214381);
+}

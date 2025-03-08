@@ -10,7 +10,7 @@
 //!
 //! ### 🦀 Prerequisites
 //!
-//! You will need to have Rust installed on your machine. You can install Rust by following the instructions on the [official Rust lang site](https://www.rust-lang.org/tools/install).
+//! You will need to have Rust and the Cargo package manager installed on your machine. You can install them by following the instructions on the [official Rust lang site](https://www.rust-lang.org/tools/install).
 //!
 //! ### 🖥️ Installing
 //!
@@ -687,6 +687,7 @@ impl Default for Polynomial {
         Self::new()
     }
 }
+
 
 #[cfg(test)]
 mod tests;

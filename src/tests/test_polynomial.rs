@@ -673,4 +673,3 @@ fn test_interval_concave_up_down_both_or_neither() {
     assert_eq!(p1.concavity_over_interval(-2.0, -0.25), "concave down");
     assert_eq!(p1.concavity_over_interval(-1.0, 0.5), "undefined");
 }
-
