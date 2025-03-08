@@ -11,6 +11,7 @@ This is very much a work in progress at this stage. Feel free to contribute any 
     - [x] nth-power derivatives of monomials & polynomials
     - [x] determine whether a certain interval grows, shrinks, stays constant or none of the above over a given interval
     - [x] Determine whether a given interval is overall "concave up", "concave down", or "undefined".
+- [ ] Find a good way to integrate trig functions into the capabilities of the Monomial and Polynomial structs.
 - [ ] Suggest more features here. 
 
 ## 📄 Documentation
