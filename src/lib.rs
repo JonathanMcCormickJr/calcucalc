@@ -30,6 +30,8 @@
 //! Overall, this library relies heavily on the use of the `f64` type for the sake of flexibility and generality.
 //!
 
+use serde::{Deserialize, Serialize};
+
 /// A monomial is a product of a coefficient and an exponent of x.
 /// For example, in the monomial `3x^2`, the coefficient is `3` and the exponent of x is `2`.
 /// The monomial `3x^2` can be represented as a struct with the coefficient `3` and the exponent `2`. Using the calcucalc library, this monomial would be represented in this way
@@ -82,7 +84,7 @@
 /// assert_eq!(m.e, 2.0);
 /// ```
 ///
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, Default, Deserialize, PartialEq, PartialOrd, Serialize)]
 pub struct Monomial {
     /// <u>c</u>oefficient
     pub c: f64, // Coefficient
@@ -198,23 +200,6 @@ impl Monomial {
     }
 }
 
-impl Default for Monomial {
-    /// Defaults to a monomial with a coefficient of `0` and an exponent of `0`.
-    ///
-    /// This is equivalent to the monomial `0`.
-    ///
-    /// #### Example
-    /// ```rust
-    /// use calcucalc::Monomial;
-    ///
-    /// let m = Monomial::default();
-    /// assert_eq!(m, Monomial { c: 0.0, e: 0.0 });
-    /// ```
-    fn default() -> Self {
-        Self::new(0_f64, 0_f64)
-    }
-}
-
 /// A polynomial is a sum of monomials.
 /// For example, the polynomial `3x^2 + 2x + 1` can be represented as a vector of monomials, which is how this library represents it.
 ///
@@ -228,7 +213,7 @@ impl Default for Monomial {
 ///    Monomial { c: 1.0, e: 0.0 },
 /// ]);
 /// ```
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, Default, Deserialize, PartialEq, PartialOrd, Serialize)]
 pub struct Polynomial(pub Vec<Monomial>);
 
 impl Polynomial {
@@ -669,25 +654,6 @@ impl Polynomial {
         }
     }
 }
-
-impl Default for Polynomial {
-    /// Defaults to an empty polynomial.
-    ///
-    /// This is equivalent to the polynomial `0`.
-    ///
-    /// #### Example
-    /// ```rust
-    /// use calcucalc::Polynomial;
-    ///
-    /// let p = Polynomial::default();
-    /// assert_eq!(p, Polynomial(vec![]));
-    /// assert_eq!(p.0.len(), 0);
-    /// ```
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
 
 #[cfg(test)]
 mod tests;

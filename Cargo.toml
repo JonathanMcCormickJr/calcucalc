@@ -1,6 +1,6 @@
 [package]
 name = "calcucalc"
-version = "0.1.16"
+version = "0.1.17"
 edition = "2024"
 authors = ["Jonathan A. McCormick Jr."]
 license = "MIT"
@@ -8,3 +8,4 @@ repository = "https://github.com/JonathanMcCormickJr/calcucalc"
 description = "A general-purpose calculus library written in Rust."
 
 [dependencies]
+serde = { version = "1.0", features = ["derive"] }

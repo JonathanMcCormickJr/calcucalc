@@ -21,10 +21,7 @@ fn test_polynomial_identity() {
     assert_ne!(*p7, p8);
 
     let p9 = &p_1_1;
-    let p10 = Polynomial(vec![
-        MONOMIAL_1_1.clone(),
-        MONOMIAL_1_1.clone(),
-    ]);
+    let p10 = Polynomial(vec![MONOMIAL_1_1.clone(), MONOMIAL_1_1.clone()]);
     assert_ne!(*p9, p10);
 }
 
@@ -672,4 +669,10 @@ fn test_interval_concave_up_down_both_or_neither() {
     assert_eq!(p1.concavity_over_interval(1.0, 2.0), "concave up");
     assert_eq!(p1.concavity_over_interval(-2.0, -0.25), "concave down");
     assert_eq!(p1.concavity_over_interval(-1.0, 0.5), "undefined");
+}
+
+#[test]
+fn test_polynomial_default() {
+    let p: Polynomial = Default::default();
+    assert_eq!(p.0.len(), 0);
 }
