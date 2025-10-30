@@ -1,4 +1,5 @@
 #![forbid(unsafe_code)]
+#![warn(clippy::pedantic)]
 
 //! # 🔢 calcucalc 📈
 //!
@@ -102,6 +103,7 @@ impl Monomial {
     /// let m = Monomial::new(1.0, 2.0);
     /// assert_eq!(m, Monomial { c: 1.0, e: 2.0 });
     /// ```
+    #[must_use]
     pub fn new(c: f64, e: f64) -> Monomial {
         Monomial { c, e }
     }
@@ -118,6 +120,7 @@ impl Monomial {
     /// assert_eq!(m.value(4.0), 128.0);
     /// assert_eq!(m.value(5.0), 250.0);
     /// ```
+    #[must_use]
     pub fn value(&self, x: f64) -> f64 {
         self.c * (x.powf(self.e))
     }
@@ -133,14 +136,19 @@ impl Monomial {
     /// let m3 = Monomial { c: 3.0, e: 3.141592653589793 };
     /// assert_eq!(m3, m1.add_monomial_of_same_power(m2));
     /// ```
-    pub fn add_monomial_of_same_power(&self, other: Monomial) -> Monomial {
+    /// 
+    /// ## Errors
+    /// 
+    /// If the two monomials do not have the same exponent of x, an error is returned.
+    ///
+    pub fn add_monomial_of_same_power(&self, other: &Monomial) -> Result<Monomial, String> {
         if self.e != other.e {
-            panic!("Cannot add monomials with different powers of x.");
-        };
-        Monomial {
+            return Err("Cannot add monomials with different powers of x.".to_string());
+        }
+        Ok(Monomial {
             c: self.c + other.c,
             e: self.e,
-        }
+        })
     }
 
     /// Multiplies one monomial by another.
@@ -325,7 +333,7 @@ impl Polynomial {
             for simplified_element in &mut simplified_elements.0 {
                 if simplified_element.e == element.e {
                     *simplified_element =
-                        simplified_element.add_monomial_of_same_power(element.clone());
+                        simplified_element.add_monomial_of_same_power(&element).unwrap();
                     found_match = true;
                     break;
                 }
