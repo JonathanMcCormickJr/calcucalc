@@ -104,8 +104,8 @@ impl Monomial {
     /// assert_eq!(m, Monomial { c: 1.0, e: 2.0 });
     /// ```
     #[must_use]
-    pub fn new(c: f64, e: f64) -> Monomial {
-        Monomial { c, e }
+    pub fn new(c: f64, e: f64) -> Self {
+        Self { c, e }
     }
 
     /// Calculates the value of the monomial for a given value of x.
@@ -134,18 +134,19 @@ impl Monomial {
     /// let m1 = Monomial { c: 1.0, e: 3.141592653589793 };
     /// let m2 = Monomial { c: 2.0, e: 3.141592653589793 };
     /// let m3 = Monomial { c: 3.0, e: 3.141592653589793 };
-    /// assert_eq!(m3, m1.add_monomial_of_same_power(m2));
+    /// assert_eq!(m3, m1.add_monomial_of_same_power(&m2).unwrap());
     /// ```
     /// 
     /// ## Errors
     /// 
     /// If the two monomials do not have the same exponent of x, an error is returned.
     ///
-    pub fn add_monomial_of_same_power(&self, other: &Monomial) -> Result<Monomial, String> {
-        if self.e != other.e {
+    pub fn add_monomial_of_same_power(&self, other: &Self) -> Result<Self, String> {
+        let error_margin = 1e-10;
+        if (self.e - other.e).abs() > error_margin {
             return Err("Cannot add monomials with different powers of x.".to_string());
         }
-        Ok(Monomial {
+        Ok(Self {
             c: self.c + other.c,
             e: self.e,
         })
@@ -160,10 +161,11 @@ impl Monomial {
     /// let m1 = Monomial { c: 1.0, e: 3.141592653589793 };
     /// let m2 = Monomial { c: 2.0, e: 3.141592653589793 };
     /// let m3 = Monomial { c: 2.0, e: 6.283185307179586 };
-    /// assert_eq!(m3, m1.multiply_monomial(m2));
+    /// assert_eq!(m3, m1.multiply_monomial(&m2));
     /// ```
-    pub fn multiply_monomial(&self, other: Monomial) -> Monomial {
-        Monomial {
+    #[must_use]
+    pub fn multiply_monomial(&self, other: &Self) -> Self {
+        Self {
             c: self.c * other.c,
             e: self.e + other.e,
         }
@@ -180,8 +182,9 @@ impl Monomial {
     /// let m_derivative = Monomial { c: 3.141592653589793, e: 2.141592653589793 };
     /// assert_eq!(m_derivative, m.derivative());
     /// ```
-    pub fn derivative(&self) -> Monomial {
-        Monomial {
+    #[must_use]
+    pub fn derivative(&self) -> Self {
+        Self {
             c: self.c * self.e,
             e: self.e - 1_f64,
         }
@@ -199,7 +202,8 @@ impl Monomial {
     /// let m_nth_derivative = m.nth_derivative(2);
     /// assert_eq!(m_nth_derivative, Monomial { c: 6.728011747499565, e: 1.1415926535897931 });
     /// ```
-    pub fn nth_derivative(&self, n: u32) -> Monomial {
+    #[must_use]
+    pub fn nth_derivative(&self, n: u32) -> Self {
         let mut new_monomial = self.clone();
         for _ in 0..n {
             new_monomial = new_monomial.derivative();
@@ -235,8 +239,8 @@ impl Polynomial {
     /// assert_eq!(my_polynomial.0.len(), 0);
     /// assert_eq!(my_polynomial, Polynomial(vec![]));
     /// ```
-    pub fn new() -> Polynomial {
-        Polynomial(vec![])
+    pub fn new() -> Self {
+        Self(vec![])
     }
 
     /// Calculates the value of a polynomial for a given value of x.
@@ -294,7 +298,7 @@ impl Polynomial {
     ///     Monomial { c: -2.0, e: 0.0 },
     /// ]));
     /// ```
-    pub fn simplified(&self) -> Polynomial {
+    pub fn simplified(&self) -> Self {
         self.simplify_by_combining_alike_powers()
             .eliminate_zero_coefficients()
             .sort_by_exponent()
@@ -316,9 +320,9 @@ impl Polynomial {
     ///     Monomial { c: 6.0, e: 2.0 },
     /// ]));
     /// ```
-    pub fn simplify_by_combining_alike_powers(&self) -> Polynomial {
+    pub fn simplify_by_combining_alike_powers(&self) -> Self {
         let elements = &self.0;
-        let mut simplified_elements = Polynomial::new();
+        let mut simplified_elements = Self::new();
 
         let mut first_element_transferred = false;
 
@@ -362,7 +366,7 @@ impl Polynomial {
     ///    Monomial { c: 1.0, e: 2.0 },
     /// ]));
     /// ```
-    pub fn eliminate_zero_coefficients(&self) -> Polynomial {
+    pub fn eliminate_zero_coefficients(&self) -> Self {
         let elements = &self.0;
         let mut new_elements = vec![];
         for element in elements {
@@ -370,7 +374,7 @@ impl Polynomial {
                 new_elements.push(element.clone());
             }
         }
-        Polynomial(new_elements)
+        Self(new_elements)
     }
 
     /// Sorts the elements of the polynomial by the exponent of x (in descending order).
@@ -397,10 +401,10 @@ impl Polynomial {
     ///     Monomial { c: 3.0, e: -2.0 },
     /// ]));
     /// ```
-    pub fn sort_by_exponent(&self) -> Polynomial {
+    pub fn sort_by_exponent(&self) -> Self {
         let mut elements = self.0.clone();
         elements.sort_by(|a, b| b.e.partial_cmp(&a.e).unwrap());
-        Polynomial(elements)
+        Self(elements)
     }
 
     /// Adds one polynomial to another.
@@ -425,10 +429,10 @@ impl Polynomial {
     /// ```
     ///
     /// `add_polynomial()` itself calls `simplified()` before returning the result.
-    pub fn add_polynomial(&self, other: Polynomial) -> Polynomial {
+    pub fn add_polynomial(&self, other: Self) -> Self {
         let mut elements = self.0.clone();
         elements.extend(other.0.clone());
-        let new_polynomial = Polynomial(elements);
+        let new_polynomial = Self(elements);
         new_polynomial.simplified()
     }
 
@@ -455,14 +459,14 @@ impl Polynomial {
     /// ```
     ///
     /// `multiply_polynomial()` itself calls `simplified()` before returning the result.
-    pub fn multiply_polynomial(&self, other: Polynomial) -> Polynomial {
+    pub fn multiply_polynomial(&self, other: Self) -> Self {
         let mut elements = vec![];
         for element1 in &self.0 {
             for element2 in &other.0 {
-                elements.push(element1.multiply_monomial(element2.clone()));
+                elements.push(element1.multiply_monomial(&element2));
             }
         }
-        let new_polynomial = Polynomial(elements);
+        let new_polynomial = Self(elements);
         new_polynomial.simplified()
     }
 
@@ -490,12 +494,12 @@ impl Polynomial {
     /// ```
     ///
     /// `derivative()` itself calls `simplified()` before returning the result.
-    pub fn derivative(&self) -> Polynomial {
+    pub fn derivative(&self) -> Self {
         let mut elements = vec![];
         for element in &self.0 {
             elements.push(element.derivative());
         }
-        Polynomial(elements).simplified()
+        Self(elements).simplified()
     }
 
     /// Calculates the nth derivative of the polynomial.
@@ -534,7 +538,7 @@ impl Polynomial {
     /// let my_nth_derivative = my_polynomial.nth_derivative(3);
     /// assert_eq!(my_nth_derivative, Polynomial(vec![Monomial { c: 6.0, e: 0.0 }]));  // The third derivative of a constant is always 0.
     /// ```
-    pub fn nth_derivative(&self, n: u32) -> Polynomial {
+    pub fn nth_derivative(&self, n: u32) -> Self {
         let mut new_polynomial = self.clone();
         for _ in 0..n {
             new_polynomial = new_polynomial.derivative();
@@ -562,7 +566,7 @@ impl Polynomial {
     /// ```
     ///
     /// The above code will return `true` because the two polynomials are equal within a tolerance of `1e-10`.
-    pub fn is_equal_within_tolerance_to(&self, other: Polynomial) -> bool {
+    pub fn is_equal_within_tolerance_to(&self, other: Self) -> bool {
         let tolerance = 1e-10;
         let simplified_self = self.simplified();
         let simplified_other = other.simplified();

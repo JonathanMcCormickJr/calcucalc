@@ -72,22 +72,22 @@ fn test_add_monomial_of_same_power() {
     let m1 = &MONOMIAL_1_1;
     let m2 = &MONOMIAL_2_1;
     let m3 = &MONOMIAL_3_1;
-    assert_eq!(*m3, m1.add_monomial_of_same_power(m2.clone()));
+    assert_eq!(*m3, m1.add_monomial_of_same_power(&m2).unwrap());
 
     let m4 = &MONOMIAL_45_250;
     let m5 = &MONOMIAL_57_250;
     let m6 = &MONOMIAL_102_250;
-    assert_eq!(*m6, m4.add_monomial_of_same_power(m5.clone()));
+    assert_eq!(*m6, m4.add_monomial_of_same_power(&m5).unwrap());
 
     let m7 = &MONOMIAL_1_N11;
     let m8 = &MONOMIAL_2_N11;
     let m9 = &MONOMIAL_3_N11;
-    assert_eq!(*m9, m7.add_monomial_of_same_power(m8.clone()));
+    assert_eq!(*m9, m7.add_monomial_of_same_power(&m8).unwrap());
 
     let m10 = &MONOMIAL_1_0;
     let m11 = &MONOMIAL_2_0;
     let m12 = &MONOMIAL_3_0;
-    assert_eq!(*m12, m10.add_monomial_of_same_power(m11.clone()));
+    assert_eq!(*m12, m10.add_monomial_of_same_power(&m11).unwrap());
 }
 
 #[test]
@@ -95,7 +95,7 @@ fn test_add_monomial_of_same_power() {
 fn test_panic_on_adding_monomial_of_different_power0() {
     let m1 = &MONOMIAL_1_1;
     let m2 = &MONOMIAL_2_2;
-    m1.add_monomial_of_same_power(m2.clone());
+    let _result = m1.add_monomial_of_same_power(&m2).unwrap();
 }
 
 #[test]
@@ -103,7 +103,7 @@ fn test_panic_on_adding_monomial_of_different_power0() {
 fn test_panic_on_adding_monomial_of_different_power1() {
     let m3 = &MONOMIAL_1_0;
     let m4 = &MONOMIAL_2_1;
-    m3.add_monomial_of_same_power(m4.clone());
+    let _result = m3.add_monomial_of_same_power(&m4).unwrap();
 }
 
 #[test]
@@ -111,7 +111,7 @@ fn test_panic_on_adding_monomial_of_different_power1() {
 fn test_panic_on_adding_monomial_of_different_power2() {
     let m5 = &MONOMIAL_1_N1;
     let m6 = &MONOMIAL_2_0;
-    m5.add_monomial_of_same_power(m6.clone());
+    let _result = m5.add_monomial_of_same_power(&m6).unwrap();
 }
 
 #[test]
@@ -119,7 +119,7 @@ fn test_panic_on_adding_monomial_of_different_power2() {
 fn test_panic_on_adding_monomial_of_different_power3() {
     let m7 = &MONOMIAL_1_N1;
     let m8 = &MONOMIAL_2_1;
-    m7.add_monomial_of_same_power(m8.clone());
+    let _result = m7.add_monomial_of_same_power(&m8).unwrap();
 }
 
 #[test]
@@ -127,32 +127,32 @@ fn test_multiply_monomial() {
     let m1 = &MONOMIAL_2_1;
     let m2 = &MONOMIAL_3_2;
     let m3 = &MONOMIAL_6_3;
-    assert_eq!(*m3, m1.multiply_monomial(m2.clone()));
+    assert_eq!(*m3, m1.multiply_monomial(&m2));
 
     let m4 = &MONOMIAL_45_250;
     let m5 = &MONOMIAL_57_250;
     let m6 = &MONOMIAL_2565_500;
-    assert_eq!(*m6, m4.multiply_monomial(m5.clone()));
+    assert_eq!(*m6, m4.multiply_monomial(&m5));
 
     let m7 = &MONOMIAL_1_N11;
     let m8 = &MONOMIAL_2_N11;
     let m9 = &MONOMIAL_2_N22;
-    assert_eq!(*m9, m7.multiply_monomial(m8.clone()));
+    assert_eq!(*m9, m7.multiply_monomial(&m8));
 
     let m10 = &MONOMIAL_1_0;
     let m11 = &MONOMIAL_2_0;
     let m12 = &MONOMIAL_2_0;
-    assert_eq!(*m12, m10.multiply_monomial(m11.clone()));
+    assert_eq!(*m12, m10.multiply_monomial(&m11));
 
     let m13 = &MONOMIAL_1_0;
     let m14 = &MONOMIAL_0_500;
     let m15 = &MONOMIAL_0_500;
-    assert_eq!(*m15, m13.multiply_monomial(m14.clone()));
+    assert_eq!(*m15, m13.multiply_monomial(&m14));
 
     let m16 = &MONOMIAL_0_0;
     let m17 = &MONOMIAL_0_0;
     let m18 = &MONOMIAL_0_0;
-    assert_eq!(*m18, m16.multiply_monomial(m17.clone()));
+    assert_eq!(*m18, m16.multiply_monomial(&m17));
 }
 
 #[test]
