@@ -56,7 +56,7 @@ fn test_simplified() {
         Monomial { c: 2_f64, e: 1_f64 },
     ]);
     let p2 = Polynomial(vec![Monomial { c: 3_f64, e: 1_f64 }]);
-    assert_eq!(p2, p1.simplified());
+    assert_eq!(p2, p1.simplified().unwrap());
 
     let p3 = Polynomial(vec![
         Monomial { c: 1_f64, e: 1_f64 },
@@ -64,7 +64,7 @@ fn test_simplified() {
         Monomial { c: 3_f64, e: 1_f64 },
     ]);
     let p4 = Polynomial(vec![Monomial { c: 6_f64, e: 1_f64 }]);
-    assert_eq!(p4, p3.simplified());
+    assert_eq!(p4, p3.simplified().unwrap());
 
     let p5 = Polynomial(vec![
         Monomial {
@@ -85,7 +85,7 @@ fn test_simplified() {
         c: -2_f64,
         e: 1_f64,
     }]);
-    assert_eq!(p6, p5.simplified());
+    assert_eq!(p6, p5.simplified().unwrap());
 
     let p7 = Polynomial(vec![
         Monomial { c: 1_f64, e: 1_f64 },
@@ -98,7 +98,7 @@ fn test_simplified() {
         c: 15_f64,
         e: 1_f64,
     }]);
-    assert_eq!(p8, p7.simplified());
+    assert_eq!(p8, p7.simplified().unwrap());
 
     let p9 = Polynomial(vec![
         Monomial { c: 1_f64, e: 1_f64 },
@@ -112,7 +112,7 @@ fn test_simplified() {
         c: 21_f64,
         e: 1_f64,
     }]);
-    assert_eq!(p10, p9.simplified());
+    assert_eq!(p10, p9.simplified().unwrap());
 
     let p11 = Polynomial(vec![
         Monomial { c: 1_f64, e: 1_f64 },
@@ -127,7 +127,7 @@ fn test_simplified() {
         c: 28_f64,
         e: 1_f64,
     }]);
-    assert_eq!(p12, p11.simplified());
+    assert_eq!(p12, p11.simplified().unwrap());
 
     let p13 = Polynomial(vec![
         Monomial {
@@ -286,7 +286,7 @@ fn test_simplified() {
             e: -10_f64,
         },
     ]);
-    assert_eq!(p17.simplified(), p18);
+    assert_eq!(p17.simplified().unwrap(), p18);
 
     let p19 = Polynomial(vec![
         Monomial {
@@ -342,7 +342,7 @@ fn test_simplified() {
             e: -10_f64,
         },
     ]);
-    assert_eq!(p19.simplified(), p20);
+    assert_eq!(p19.simplified().unwrap(), p20);
 }
 
 #[test]
@@ -350,7 +350,7 @@ fn test_add_polynomial() {
     let p1 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
     let p2 = Polynomial(vec![Monomial { c: 2_f64, e: 1_f64 }]);
     let p3 = Polynomial(vec![Monomial { c: 3_f64, e: 1_f64 }]);
-    assert_eq!(p3, p1.add_polynomial(p2));
+    assert_eq!(p3, p1.add_polynomial(p2).unwrap());
 
     let p4 = Polynomial(vec![
         Monomial {
@@ -373,7 +373,7 @@ fn test_add_polynomial() {
             e: -1.8_f64,
         },
     ]);
-    assert_eq!(p6, p4.add_polynomial(p5));
+    assert_eq!(p6, p4.add_polynomial(p5).unwrap());
 
     let p7 = Polynomial(vec![
         Monomial { c: 1_f64, e: 1_f64 },
@@ -408,7 +408,7 @@ fn test_add_polynomial() {
             e: -1_f64,
         },
     ]);
-    assert_eq!(p9, p7.add_polynomial(p8));
+    assert_eq!(p9, p7.add_polynomial(p8).unwrap());
 }
 
 #[test]
@@ -416,7 +416,7 @@ fn test_multiply_polynomial() {
     let p1 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
     let p2 = Polynomial(vec![Monomial { c: 2_f64, e: 1_f64 }]);
     let p3 = Polynomial(vec![Monomial { c: 2_f64, e: 2_f64 }]);
-    assert_eq!(p3, p1.multiply_polynomial(p2));
+    assert_eq!(p3, p1.multiply_polynomial(p2).unwrap());
 
     let p4 = Polynomial(vec![
         Monomial {
@@ -443,7 +443,7 @@ fn test_multiply_polynomial() {
             e: -3.6_f64,
         },
     ]);
-    assert_eq!(p6, p4.multiply_polynomial(p5));
+    assert_eq!(p6, p4.multiply_polynomial(p5).unwrap());
 }
 
 #[test]
@@ -451,7 +451,7 @@ fn test_derivative() {
     let p1 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
     assert_eq!(
         Polynomial(vec![Monomial { c: 1_f64, e: 0_f64 }]),
-        p1.derivative()
+        p1.derivative().unwrap()
     );
 
     let p2 = Polynomial(vec![
@@ -478,7 +478,7 @@ fn test_derivative() {
                 e: -4_f64
             },
         ])
-        .is_equal_within_tolerance_to(p2.derivative())
+        .is_equal_within_tolerance_to(p2.derivative().unwrap()).unwrap()
     );
 
     let p3 = Polynomial(vec![Monomial {
@@ -490,7 +490,7 @@ fn test_derivative() {
             c: -6_f64,
             e: -2.5_f64
         }]),
-        p3.derivative()
+        p3.derivative().unwrap()
     );
 
     // ADD MORE TESTS HERE...
@@ -500,11 +500,11 @@ fn test_derivative() {
 fn test_is_equal_within_tolerance_to() {
     let p1 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
     let p2 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
-    assert!(p1.is_equal_within_tolerance_to(p2));
+    assert!(p1.is_equal_within_tolerance_to(p2).unwrap());
 
     let p3 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
     let p4 = Polynomial(vec![Monomial { c: 1_f64, e: 0_f64 }]);
-    assert!(!p3.is_equal_within_tolerance_to(p4));
+    assert!(!p3.is_equal_within_tolerance_to(p4).unwrap());
 
     let p5 = Polynomial(vec![Monomial {
         c: -246_f64,
@@ -514,21 +514,21 @@ fn test_is_equal_within_tolerance_to() {
         c: -246_f64,
         e: 0.45_f64,
     }]);
-    assert!(p5.is_equal_within_tolerance_to(p6));
+    assert!(p5.is_equal_within_tolerance_to(p6).unwrap());
 
     let p7 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
     let p8 = Polynomial(vec![Monomial {
         c: 1.00000000001_f64,
         e: 1.00000000001_f64,
     }]);
-    assert!(p7.is_equal_within_tolerance_to(p8));
+    assert!(p7.is_equal_within_tolerance_to(p8).unwrap());
 
     let p9 = Polynomial(vec![Monomial { c: 1_f64, e: 1_f64 }]);
     let p10 = Polynomial(vec![Monomial {
         c: 0.99999999999_f64,
         e: 0.99999999999_f64,
     }]);
-    assert!(p9.is_equal_within_tolerance_to(p10));
+    assert!(p9.is_equal_within_tolerance_to(p10).unwrap());
 }
 
 #[test]
@@ -543,7 +543,7 @@ fn test_nth_derivative() {
         Monomial { c: 3_f64, e: 1_f64 },
     ]);
     assert_eq!(
-        p1.nth_derivative(3),
+        p1.nth_derivative(3).unwrap(),
         Polynomial(vec![
             Monomial { c: 24.0, e: 1.0 },
             Monomial { c: -36.0, e: 0.0 }
@@ -560,7 +560,7 @@ fn test_nth_derivative() {
         Monomial { c: 0.0, e: 5.0 },
     ]);
     assert_eq!(
-        p2.nth_derivative(15),
+        p2.nth_derivative(15).unwrap(),
         Polynomial(vec![
             Monomial {
                 c: 1.2200689110119749e29,
@@ -573,7 +573,7 @@ fn test_nth_derivative() {
         ])
     );
     assert_eq!(
-        p2.nth_derivative(64),
+        p2.nth_derivative(64).unwrap(),
         Polynomial(vec![
             Monomial {
                 c: 2.66837419180906e92,
@@ -596,7 +596,7 @@ fn test_nth_derivative() {
         Monomial { c: 0.0, e: 5.0 },
     ]);
     assert_eq!(
-        p3.nth_derivative(15),
+        p3.nth_derivative(15).unwrap(),
         Polynomial(vec![
             Monomial {
                 c: -5.140628626036299e27,
@@ -665,10 +665,10 @@ fn test_interval_concave_up_down_both_or_neither() {
         Monomial { c: -2.0, e: 1.0 },
         Monomial { c: 1.0, e: 0.0 },
     ]);
-    assert_eq!(p1.concavity_over_interval(0.0, 1.0), "concave up");
-    assert_eq!(p1.concavity_over_interval(1.0, 2.0), "concave up");
-    assert_eq!(p1.concavity_over_interval(-2.0, -0.25), "concave down");
-    assert_eq!(p1.concavity_over_interval(-1.0, 0.5), "undefined");
+    assert_eq!(p1.concavity_over_interval(0.0, 1.0).unwrap(), "concave up");
+    assert_eq!(p1.concavity_over_interval(1.0, 2.0).unwrap(), "concave up");
+    assert_eq!(p1.concavity_over_interval(-2.0, -0.25).unwrap(), "concave down");
+    assert_eq!(p1.concavity_over_interval(-1.0, 0.5).unwrap(), "undefined");
 }
 
 #[test]

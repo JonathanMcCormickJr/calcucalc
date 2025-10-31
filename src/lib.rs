@@ -33,6 +33,8 @@
 
 use serde::{Deserialize, Serialize};
 
+pub mod math_helpers;
+
 /// A monomial is a product of a coefficient and an exponent of x.
 /// For example, in the monomial `3x^2`, the coefficient is `3` and the exponent of x is `2`.
 /// The monomial `3x^2` can be represented as a struct with the coefficient `3` and the exponent `2`. Using the calcucalc library, this monomial would be represented in this way
@@ -104,7 +106,6 @@ impl Monomial {
     /// let m = Monomial::new(1.0, 2.0);
     /// assert_eq!(m, Monomial { c: 1.0, e: 2.0 });
     /// ```
-    #[must_use]
     pub fn new(c: f64, e: f64) -> Self {
         Self { c, e }
     }
@@ -143,8 +144,7 @@ impl Monomial {
     /// If the two monomials do not have the same exponent of x, an error is returned.
     ///
     pub fn add_monomial_of_same_power(&self, other: &Self) -> Result<Self, String> {
-        let error_margin = 1e-10;
-        if (self.e - other.e).abs() > error_margin {
+        if !math_helpers::is_equal_within_tolerance_to(&self.e, &other.e) {
             return Err("Cannot add monomials with different powers of x.".to_string());
         }
         Ok(Self {
@@ -164,7 +164,6 @@ impl Monomial {
     /// let m3 = Monomial { c: 2.0, e: 6.283185307179586 };
     /// assert_eq!(m3, m1.multiply_monomial(&m2));
     /// ```
-    #[must_use]
     pub fn multiply_monomial(&self, other: &Self) -> Self {
         Self {
             c: self.c * other.c,
@@ -183,7 +182,6 @@ impl Monomial {
     /// let m_derivative = Monomial { c: 3.141592653589793, e: 2.141592653589793 };
     /// assert_eq!(m_derivative, m.derivative());
     /// ```
-    #[must_use]
     pub fn derivative(&self) -> Self {
         Self {
             c: self.c * self.e,
@@ -203,13 +201,31 @@ impl Monomial {
     /// let m_nth_derivative = m.nth_derivative(2);
     /// assert_eq!(m_nth_derivative, Monomial { c: 6.728011747499565, e: 1.1415926535897931 });
     /// ```
-    #[must_use]
     pub fn nth_derivative(&self, n: u32) -> Self {
         let mut new_monomial = self.clone();
         for _ in 0..n {
             new_monomial = new_monomial.derivative();
         }
         new_monomial
+    }
+
+    /// Checks if two monomials are equal within a certain tolerance.
+    /// The default tolerance is determined by the `is_equal_within_tolerance_to` function in the `math_helpers` module.
+    /// 
+    /// #### Example
+    /// ```rust
+    /// use calcucalc::Monomial;
+    /// 
+    /// let m1 = Monomial { c: 1.00000000001, e: 2.00000000001 };
+    /// let m2 = Monomial { c: 1.00000000002, e: 2.00000000002 };
+    /// assert!(m1.is_equal_within_tolerance_to(&m2));
+    /// ```
+    #[must_use]
+    pub fn is_equal_within_tolerance_to(&self, other: &Self) -> bool {
+        let c_equal = math_helpers::is_equal_within_tolerance_to(&self.c, &other.c);
+        let e_equal = math_helpers::is_equal_within_tolerance_to(&self.e, &other.e);
+
+        c_equal && e_equal
     }
 }
 
@@ -241,7 +257,6 @@ impl Polynomial {
     /// assert_eq!(my_polynomial.0.len(), 0);
     /// assert_eq!(my_polynomial, Polynomial(vec![]));
     /// ```
-    #[must_use]
     pub fn new() -> Self {
         Self(vec![])
     }
@@ -262,7 +277,7 @@ impl Polynomial {
     /// assert_eq!(my_polynomial.value(1.0), 6.0);
     /// assert_eq!(my_polynomial.value(2.0), 12.0);
     /// assert_eq!(my_polynomial.value(3.0), 20.0);
-    ///
+    /// ```
     #[must_use]
     pub fn value(&self, x: f64) -> f64 {
         let elements = &self.0;
@@ -294,7 +309,7 @@ impl Polynomial {
     ///     Monomial { c: -500.0, e: 0.453 },
     /// ]);
     ///
-    /// let simplified_polynomial = my_polynomial.simplified();
+    /// let simplified_polynomial = my_polynomial.simplified().unwrap();
     ///
     /// assert_eq!(simplified_polynomial, Polynomial(vec![
     ///     Monomial { c: 3.0, e: 2.0 },
@@ -302,11 +317,14 @@ impl Polynomial {
     ///     Monomial { c: -2.0, e: 0.0 },
     /// ]));
     /// ```
-    #[must_use]
-    pub fn simplified(&self) -> Self {
-        self.simplify_by_combining_alike_powers()
+    /// 
+    /// ## Errors
+    /// 
+    /// If two monomials with different exponents are attempted to be combined, an error is returned.
+    pub fn simplified(&self) -> Result<Self, String> {
+        Ok(self.simplify_by_combining_alike_powers()?
             .eliminate_zero_coefficients()
-            .sort_by_exponent()
+            .sort_by_exponent())
     }
 
     /// Combines elements which have the same exponent of x.
@@ -320,12 +338,15 @@ impl Polynomial {
     ///     Monomial { c: 2.0, e: 2.0 },
     ///     Monomial { c: 3.0, e: 2.0 },
     /// ]);
-    /// let simplified_polynomial = my_polynomial.simplify_by_combining_alike_powers();
+    /// let simplified_polynomial = my_polynomial.simplify_by_combining_alike_powers().unwrap();
     /// assert_eq!(simplified_polynomial, Polynomial(vec![
     ///     Monomial { c: 6.0, e: 2.0 },
     /// ]));
     /// ```
-    pub fn simplify_by_combining_alike_powers(&self) -> Self {
+    /// ## Errors
+    /// 
+    /// If two monomials with different exponents are attempted to be combined, an error is returned.
+    pub fn simplify_by_combining_alike_powers(&self) -> Result<Self, String> {
         let elements = &self.0;
         let mut simplified_elements = Self::new();
 
@@ -340,9 +361,9 @@ impl Polynomial {
 
             let mut found_match = false;
             for simplified_element in &mut simplified_elements.0 {
-                if simplified_element.e == element.e {
+                if math_helpers::is_equal_within_tolerance_to(&element.e, &simplified_element.e) {
                     *simplified_element =
-                        simplified_element.add_monomial_of_same_power(&element).unwrap();
+                        simplified_element.add_monomial_of_same_power(element)?;
                     found_match = true;
                     break;
                 }
@@ -351,7 +372,7 @@ impl Polynomial {
                 simplified_elements.0.push(element.clone());
             }
         }
-        simplified_elements
+        Ok(simplified_elements)
     }
 
     /// Eliminates elements with coefficients of `0`.
@@ -408,7 +429,7 @@ impl Polynomial {
     /// ```
     pub fn sort_by_exponent(&self) -> Self {
         let mut elements = self.0.clone();
-        elements.sort_by(|a, b| b.e.partial_cmp(&a.e).unwrap());
+        elements.sort_by(|a, b| b.e.partial_cmp(&a.e).unwrap_or(std::cmp::Ordering::Equal));
         Self(elements)
     }
 
@@ -426,7 +447,7 @@ impl Polynomial {
     ///     Monomial { c: 3.0, e: 2.0 },
     ///     Monomial { c: 4.0, e: 1.0 },
     /// ]);
-    /// let my_sum = my_polynomial1.add_polynomial(my_polynomial2);
+    /// let my_sum = my_polynomial1.add_polynomial(my_polynomial2).unwrap();
     /// assert_eq!(my_sum, Polynomial(vec![
     ///     Monomial { c: 4.0, e: 2.0 },
     ///     Monomial { c: 6.0, e: 1.0 },
@@ -434,11 +455,15 @@ impl Polynomial {
     /// ```
     ///
     /// `add_polynomial()` itself calls `simplified()` before returning the result.
-    pub fn add_polynomial(&self, other: Self) -> Self {
+    /// 
+    /// ## Errors
+    /// 
+    /// If two monomials with different exponents are attempted to be combined, an error is returned.
+    pub fn add_polynomial(&self, other: Self) -> Result<Self, String> {
         let mut elements = self.0.clone();
         elements.extend(other.0.clone());
         let new_polynomial = Self(elements);
-        new_polynomial.simplified()
+        Ok(new_polynomial.simplified()?)
     }
 
     /// Multiplies one polynomial by another.
@@ -455,7 +480,7 @@ impl Polynomial {
     ///    Monomial { c: 4.0, e: 1.0 },
     ///    Monomial { c: 3.0, e: 2.0 },
     /// ]);
-    /// let my_product = my_polynomial1.multiply_polynomial(my_polynomial2);
+    /// let my_product = my_polynomial1.multiply_polynomial(my_polynomial2).unwrap();
     /// assert_eq!(my_product, Polynomial(vec![
     ///    Monomial { c: 3.0, e: 4.0 },
     ///    Monomial { c: 10.0, e: 3.0 },
@@ -464,7 +489,11 @@ impl Polynomial {
     /// ```
     ///
     /// `multiply_polynomial()` itself calls `simplified()` before returning the result.
-    pub fn multiply_polynomial(&self, other: Self) -> Self {
+    /// 
+    /// ## Errors
+    /// 
+    /// If two monomials with different exponents are attempted to be combined, an error is returned.
+    pub fn multiply_polynomial(&self, other: Self) -> Result<Self, String> {
         let mut elements = vec![];
         for element1 in &self.0 {
             for element2 in &other.0 {
@@ -472,7 +501,7 @@ impl Polynomial {
             }
         }
         let new_polynomial = Self(elements);
-        new_polynomial.simplified()
+        Ok(new_polynomial.simplified()?)
     }
 
     /// Calculates the derivative of the polynomial.
@@ -488,7 +517,7 @@ impl Polynomial {
     ///     Monomial { c: 2.0, e: 1.0 },
     ///     Monomial { c: 3.0, e: 0.0 },
     /// ]);
-    /// let my_derivative = my_polynomial.derivative();
+    /// let my_derivative = my_polynomial.derivative().unwrap();
     /// assert_eq!(my_derivative, Polynomial(vec![Monomial { c: 2.0, e: 1.0 }, Monomial { c: 2.0, e: 0.0 }]));
     /// ```
     ///
@@ -499,12 +528,16 @@ impl Polynomial {
     /// ```
     ///
     /// `derivative()` itself calls `simplified()` before returning the result.
-    pub fn derivative(&self) -> Self {
+    /// 
+    /// ## Errors
+    /// 
+    /// If two monomials with different exponents are attempted to be combined, an error is returned.
+    pub fn derivative(&self) -> Result<Self, String> {
         let mut elements = vec![];
         for element in &self.0 {
             elements.push(element.derivative());
         }
-        Self(elements).simplified()
+        Ok(Self(elements).simplified()?)
     }
 
     /// Calculates the nth derivative of the polynomial.
@@ -520,7 +553,7 @@ impl Polynomial {
     ///     Monomial { c: 2.0, e: 1.0 },
     ///     Monomial { c: 3.0, e: 0.0 },
     /// ]);
-    /// let my_nth_derivative = my_polynomial.nth_derivative(2);
+    /// let my_nth_derivative = my_polynomial.nth_derivative(2).unwrap();
     /// assert_eq!(my_nth_derivative, Polynomial(vec![Monomial { c: 2.0, e: 0.0 }]));
     /// ```
     ///
@@ -540,15 +573,19 @@ impl Polynomial {
     ///     Monomial { c: 3.0, e: 1.0 },
     ///     Monomial { c: 4.0, e: 0.0 },
     /// ]);
-    /// let my_nth_derivative = my_polynomial.nth_derivative(3);
+    /// let my_nth_derivative = my_polynomial.nth_derivative(3).unwrap();
     /// assert_eq!(my_nth_derivative, Polynomial(vec![Monomial { c: 6.0, e: 0.0 }]));  // The third derivative of a constant is always 0.
     /// ```
-    pub fn nth_derivative(&self, n: u32) -> Self {
+    /// 
+    /// ## Errors
+    /// 
+    /// If two monomials with different exponents are attempted to be combined, an error is returned.
+    pub fn nth_derivative(&self, n: u32) -> Result<Self, String> {
         let mut new_polynomial = self.clone();
         for _ in 0..n {
-            new_polynomial = new_polynomial.derivative();
+            new_polynomial = new_polynomial.derivative()?;
         }
-        new_polynomial
+        Ok(new_polynomial)
     }
 
     /// Checks if the polynomial is equal to another polynomial within a certain tolerance.
@@ -567,25 +604,28 @@ impl Polynomial {
     ///     Monomial { c: 1.0, e: 2.0 },
     ///     Monomial { c: 2.0, e: 1.0 },
     /// ]);
-    /// assert!(my_polynomial1.is_equal_within_tolerance_to(my_polynomial2));
+    /// assert!(my_polynomial1.is_equal_within_tolerance_to(my_polynomial2).unwrap());
     /// ```
     ///
-    /// The above code will return `true` because the two polynomials are equal within a tolerance of `1e-10`.
-    pub fn is_equal_within_tolerance_to(&self, other: Self) -> bool {
-        let tolerance = 1e-10;
-        let simplified_self = self.simplified();
-        let simplified_other = other.simplified();
+    /// The above code will return `true` because the two polynomials are equal within the tolerance defined in the `math_helpers` module.
+    /// 
+    /// ## Errors
+    /// 
+    /// If two monomials with different exponents are attempted to be combined during simplification, an error is returned.
+    pub fn is_equal_within_tolerance_to(&self, other: Self) -> Result<bool, String> {
+        let simplified_self = self.simplified()?;
+        let simplified_other = other.simplified()?;
         if simplified_self.0.len() != simplified_other.0.len() {
-            return false;
+            return Ok(false);
         }
         for (element1, element2) in simplified_self.0.iter().zip(simplified_other.0.iter()) {
-            if (element1.c - element2.c).abs() > tolerance
-                || (element1.e - element2.e).abs() > tolerance
+            if math_helpers::is_equal_within_tolerance_to(&element1.c, &element2.c) == false
+                || math_helpers::is_equal_within_tolerance_to(&element1.e, &element2.e) == false
             {
-                return false;
+                return Ok(false);
             }
         }
-        true
+        Ok(true)
     }
 
     /// Checks whether the values of a given interval of a polynomial overall is increasing, decreasing, staying constant, or is undefined.
@@ -642,11 +682,16 @@ impl Polynomial {
     ///     Monomial { c: -2.0, e: 1.0 },
     ///     Monomial { c: 1.0, e: 0.0 },
     /// ]);
-    /// assert_eq!(my_polynomial.concavity_over_interval(-2.0, -1.0), "concave down");
-    /// assert_eq!(my_polynomial.concavity_over_interval(-1.0, 0.0), "undefined");
-    /// assert_eq!(my_polynomial.concavity_over_interval(0.0, 1.0), "concave up");
+    /// assert_eq!(my_polynomial.concavity_over_interval(-2.0, -1.0).unwrap(), "concave down");
+    /// assert_eq!(my_polynomial.concavity_over_interval(-1.0, 0.0).unwrap(), "undefined");
+    /// assert_eq!(my_polynomial.concavity_over_interval(0.0, 1.0).unwrap(), "concave up");
     ///
-    pub fn concavity_over_interval(&self, start: f64, end: f64) -> String {
+    /// ```
+    /// 
+    /// ## Errors
+    /// 
+    /// If the second derivative cannot be calculated, an error is returned.
+    pub fn concavity_over_interval(&self, start: f64, end: f64) -> Result<String, String> {
         // Validate the start and end x-values are in the correct order,
         // and swap them if they are not.
         let mut start_x = start;
@@ -656,18 +701,18 @@ impl Polynomial {
         }
 
         // Calculate the second derivative of the polynomial
-        let second_derivative = self.nth_derivative(2);
+        let second_derivative = self.nth_derivative(2)?;
 
         // Calculate the second derivative at the start and end x-values
         let start_value = second_derivative.value(start_x);
         let end_value = second_derivative.value(end_x);
 
         if start_value > 0.0 && end_value > 0.0 {
-            "concave up".to_string()
+            Ok("concave up".to_string())
         } else if start_value < 0.0 && end_value < 0.0 {
-            "concave down".to_string()
+            Ok("concave down".to_string())
         } else {
-            "undefined".to_string()
+            Ok("undefined".to_string())
         }
     }
 }
