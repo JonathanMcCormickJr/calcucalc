@@ -86,6 +86,7 @@ use serde::{Deserialize, Serialize};
 /// ```
 ///
 #[derive(Clone, Debug, Default, Deserialize, PartialEq, PartialOrd, Serialize)]
+#[must_use]
 pub struct Monomial {
     /// <u>c</u>oefficient
     pub c: f64, // Coefficient
@@ -226,6 +227,7 @@ impl Monomial {
 /// ]);
 /// ```
 #[derive(Clone, Debug, Default, Deserialize, PartialEq, PartialOrd, Serialize)]
+#[must_use]
 pub struct Polynomial(pub Vec<Monomial>);
 
 impl Polynomial {
@@ -239,6 +241,7 @@ impl Polynomial {
     /// assert_eq!(my_polynomial.0.len(), 0);
     /// assert_eq!(my_polynomial, Polynomial(vec![]));
     /// ```
+    #[must_use]
     pub fn new() -> Self {
         Self(vec![])
     }
@@ -260,6 +263,7 @@ impl Polynomial {
     /// assert_eq!(my_polynomial.value(2.0), 12.0);
     /// assert_eq!(my_polynomial.value(3.0), 20.0);
     ///
+    #[must_use]
     pub fn value(&self, x: f64) -> f64 {
         let elements = &self.0;
         let mut value = 0_f64;
@@ -298,6 +302,7 @@ impl Polynomial {
     ///     Monomial { c: -2.0, e: 0.0 },
     /// ]));
     /// ```
+    #[must_use]
     pub fn simplified(&self) -> Self {
         self.simplify_by_combining_alike_powers()
             .eliminate_zero_coefficients()
